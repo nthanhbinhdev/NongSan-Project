@@ -34,3 +34,6 @@ public/uploads/*
 
 # NHƯNG giữ lại file .gitkeep để git vẫn tạo thư mục uploads khi clone về
 !public/uploads/.gitkeep
+
+# --- Firebase Service Account Key ---
+src/config/serviceAccountKey.json
