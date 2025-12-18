@@ -1,0 +1,32 @@
+[
+  {
+    "id": "U001",
+    "username": "admin",
+    "email": "admin@gmail.com",
+    "password": "123456",
+    "role": "admin",
+    "fullName": "Quản trị viên hệ thống",
+    "phone": "0909000111",
+    "status": "active"
+  },
+  {
+    "id": "U002",
+    "username": "staff01",
+    "email": "staff@gmail.com",
+    "password": "123456",
+    "role": "staff",
+    "fullName": "Nhân viên bán hàng",
+    "phone": "0909000222",
+    "status": "active"
+  },
+  {
+    "id": "U003",
+    "username": "nguyenvana",
+    "email": "nguyenvana@gmail.com",
+    "password": "123456",
+    "role": "customer",
+    "fullName": "Nguyễn Văn A",
+    "phone": "0987654321",
+    "status": "active"
+  }
+]

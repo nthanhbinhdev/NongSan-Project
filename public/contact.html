@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nông Sản Việt</title>
+
+    <link href="./img/icon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+
+    <!--Themify Icon-->
+    <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
+
+    <!--Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+    <!--Boostrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./assets/css/contact-payment.css">
+    <link rel="stylesheet" href="./assets/css/header&footer.css">
+</head>
+
+<body>
+
+    <!--Header-->
+    <header>
+        <div class="d-flex justify-content-between">
+            <div class="empty"></div>
+            <nav class="navbar navbar-expand-sm d-flex justify-content-center">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">Giới thiệu</a>
+
+                    </li>
+                </ul>
+                <div>
+                    <img id="logo" src="./img/logo.png" alt="">
+                </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="product.html">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">Tin tức</a>
+                    </li>
+                </ul>
+            </nav>
+
+
+            <div class="d-flex justify-content-end">
+                <div class="header-btn shopping-cart-btn">
+                    <div class="shopping-cart-icon">
+                        <a href="cart.html">
+                            <i id="cart-icon" class="ti-shopping-cart text-secondary"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="header-btn account">
+                    <a href="">
+                        <div class="nav-item dropdown account-icon">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                <i id="user-icon" class="ti-user text-secondary"></i>
+                            </a>
+                            <ul class="dropdown-menu account-dropdown">
+                                <li><a class="dropdown-item text-secondary" href="login.html">Đăng Nhập</a></li>
+                                <li><a class="dropdown-item text-secondary" href="signup.html">Đăng Ký</a></li>
+                            </ul>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </header>
+    <!--End Header-->
+
+    <main>
+
+        <div class="contact-container row">
+            <div class="col-6 text-center">
+                <iframe
+                    src=""
+                    width="600" height="600" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+            <div class="col-6">
+                <div class="title text-center">
+                    <h4>LIÊN HỆ VỚI CHÚNG TÔI</h4>
+                    <p class="mt-2">Hãy liên hệ với chúng tôi để biết thêm thông tin chi tiết và được hỗ trợ !!!</p>
+                </div>
+
+                <div class="infor-container m-3">
+                    <div class="infor-item">
+                        <i class="ti-location-arrow icon"> </i>
+                        <i>Trường Đại Học</i>
+                    </div>
+
+                    <div class="infor-item">
+                        <i class="ti-headphone-alt icon"> </i>
+                        <i>0999 234 567</i>
+                    </div>
+
+                    <div class="infor-item">
+                        <i class="ti-email icon"> </i>
+                        <i>nongsanviet@gmail.com</i>
+                    </div>
+                </div>
+
+                <div class="title">
+                    <p class="m-4" style="font-weight: bold;">Hoặc để lại thông tin để chúng tôi có thể liên hệ với bạn:
+                    </p>
+                </div>
+
+                <div>
+
+                    <form action="">
+                        <div class="m-3">
+                            <div class="item">
+                                <div class="enter-item">
+                                    <input type="text" id="name" placeholder="Họ và tên">
+                                </div>
+                                <p class="mess-error"></p>
+                            </div>
+
+                            <div class="item">
+                                <div class="enter-item">
+                                    <input type="text" id="tel" placeholder="Số điện thoại">
+                                </div>
+                                <p class="mess-error"></p>
+                            </div>
+
+                            <div class="item">
+                                <div class="enter-item">
+                                    <input type="email" id="email" placeholder="Email">
+                                </div>
+                                <p class="mess-error"></p>
+                            </div>
+
+
+                            <button type="button" class="confirm-btn" id="send-infor" onclick="confrimContactForm()">Gửi thông tin</button>
+                            <button type="reset" id="clear-infor" onclick="resetContactForm()">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <button class="to-top" href="#"><i class="ti-angle-double-up"></i></button>
+    <button class="contact-btn" href="#"><a href="contact.html"><i class="ti-headphone-alt"></i></a></button>
+    <!--Footer-->
+    <footer class="">
+        <div class="row">
+            <div class="col">
+                <h3 class="footer-tittle">Giới Thiệu</h3>
+                <p class="">
+                    <b>Nông Sản Việt</b> là hành trình của những bạn trẻ nhiệt huyết, đến từ những miền quê khác nhau,
+                    kiên trì dấn thân để cùng nhau góp phần cải thiện chuỗi cung ứng nông sản Việt và mang thực phẩm an
+                    tâm đến cho cộng đồng.
+                </p>
+            </div>
+
+            <div class="col contact-info">
+                <h3 class="footer-tittle">Thông Tin Liên Hệ</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="ti-headphone-alt"> </i>
+                        <i>0999 234 567</i>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="ti-email"> </i>
+                        <i>nongsanviet@gmail.com</i>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="ti-location-arrow"> </i>
+                        <i>Trường CNTT Đại Học</i>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col">
+                <img src="./img/logo.png" alt="">
+                <p class="copyright text-center">Nông Sản Việt © 2025. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!--End Footer-->
+
+</body>
+<script src="assets/js/validate.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const toTopBtn = document.querySelector(".to-top");
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 50) {
+            toTopBtn.classList.add('active');
+        } else {
+            toTopBtn.classList.remove('active');
+        }
+    })
+
+    $(document).ready(function () {
+        $('.to-top').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+        });
+    });
+
+</script>
+
+</html>

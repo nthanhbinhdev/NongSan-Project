@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- link boxicons -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+  <!-- sidebar -->
+  <div class="sidebar">
+    <head>
+      <div class="image-text">
+        <span class="image">
+           <img src="image/logo.jpg" alt="logo">
+        </span>
+      </div>
+    </head>
+    <div class="menu">
+      <ul class="menu-links">
+        <li class="dashboard-link">
+            <a href="dashboard.html">
+               <i class='bx bxs-dashboard icon'></i>
+               <span class="text nav-text">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-link">
+            <a href="products.html">
+                <i class='bx bx-store icon'></i>
+               <span class="text nav-text">Sản Phẩm</span>
+            </a>
+        </li>
+        <li class="nav-link">
+            <a href="invoice.html">
+              <i class='bx bx-cart icon' ></i>
+               <span class="text nav-text">Đơn Hàng</span>
+            </a>
+        </li>
+        <li style="float: bottom;" class="bottom-content">
+            <a href="../login.html">
+              <i class='bx bx-log-out icon'></i>
+               <span class="text nav-text">Đăng xuất </span>
+            </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- dashboard -->
+  <section class="dashboard">
+    <div class="top">
+      <i class='bx bx-menu sidebar-toggle'></i>
+      <i class='bx bxs-user-circle logo' >
+      <i class='bx bx-bell'></i>
+      <i class='bx bx-envelope'></i>
+      </i>
+    </div>
+    <div class="dash-content">
+        <div class="overview">
+          <div class="title">
+            <i class='bx bx-tachometer'></i>
+            <span class="text">Dashboard</span>
+          </div>
+        </div>
+        <div class="boxes">
+            <div class="box box1">
+              <i class='bx bx-user-plus'></i>
+              <span class="text">Khách hàng</span>
+              <span class="number">1556</span>
+            </div>
+            <div class="box box2" >
+              <i class='bx bx-cart-download' ></i>
+              <span class="text">Đơn Hàng</span>
+              <span class="number">9220</span>
+            </div>
+            <div class="box box3">
+              <i class='bx bx-money-withdraw'></i>
+              <span class="text">Doanh thu</span>
+              <span class="number">264.5tr</span>
+            </div>
+        </div>
+        <div class="activity">
+          <div class="title">
+            <i class='bx bx-time'></i>
+            <span class="text">Hoạt động gần đây</span>
+          </div>
+          <div class="activity-data">
+            <div class="data names">
+              <span class="data-title">Tên</span>
+              <span class="data-list"> Thanh </span>
+              <span class="data-list"> Kỳ</span>
+              <span class="data-list"> Truyền</span>
+              <span class="data-list"> Khang</span>
+              <span class="data-list"> Hiểu</span>  
+            </div>
+            <div class="data email">
+              <span class="data-title">Email</span>
+              <span class="data-list"> Thanh@student.ctu.edu.vn</span>              
+              <span class="data-list"> Truyền@student.ctu.edu.vn</span>              
+              <span class="data-list"> Hiểu@student.ctu.edu.vn</span>              
+              <span class="data-list"> Khang@student.ctu.edu.vn</span>              
+              <span class="data-list"> Kỳ@student.ctu.edu.vn</span>              
+
+            </div>
+            <div class="data joined">
+              <span class="data-title">Đã tham gia</span>
+              <span class="data-list"> 2024-01-01</span>
+              <span class="data-list"> 2023-01-01</span>
+              <span class="data-list"> 2022-01-01</span>
+              <span class="data-list"> 2020-01-01</span>
+              <span class="data-list"> 2023-01-01</span>
+            </div>
+            <div class="data type">
+              <span class="data-title">Thành viên</span>
+              <span class="data-list"> mới</span>
+              <span class="data-list"> bạc</span>
+              <span class="data-list"> vàng</span>
+              <span class="data-list"> kim cương</span>
+              <span class="data-list"> bạc</span>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div style="margin-top:30px; float:right 100px;" >
+    </div>
+  </section>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

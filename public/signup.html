@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="assets/js/main.js"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <!--Themify Icon-->
+    <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
+
+    <!--Header & Footer CSS-->
+    <link rel="stylesheet" href="./assets/css/header&footer.css">
+
+</head>
+
+<body>
+    <div class="d-flex justify-content-center align-items-center"
+        style="background-image: url('img/background.jfif'); height: 100vh;">
+        <!-- <img src="img/logo.png" alt=""> -->
+        <form class="col-md-3 p-4 rounded bg-light" onsubmit="singup()">
+            <h3 class="text-center">ĐĂNG KÝ</h3>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <label for="username" class="form-label">Nhập tên người dùng:</label>
+                <input type="text" class="form-control" id="username" placeholder="Nhập tên người dùng..."
+                    name="username">
+            </div>
+            <div class="form-outline mb-4">
+                <label for="email" class="form-label">Nhập Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Nhập mail..." name="email">
+            </div>
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <label for="pwd" class="form-label">Nhập mật khẩu:</label>
+                <input type="password" class="form-control" id="pwd" placeholder="Nhập mật khẩu..."" name=" pswd">
+            </div>
+            <!-- Pre-Password input -->
+            <div class="form-outline mb-4">
+                <label for="pre-pwd" class="form-label">Nhập mật khẩu:</label>
+                <input type="password" class="form-control" id="pre-pwd" placeholder="Nhập lại mật khẩu..."" name="
+                    pre-pswd">
+            </div>
+            <div class="button-contain d-flex justify-content-center">
+                <button style="margin: 1%;" type="submit" class="btn btn-primary btn-block mb-4"
+                    style="margin: 1px;">Đăng ký</button>
+                <button style="margin: 1%;" type="button" class="btn btn-danger btn-block mb-4"
+                    onclick="cancel()">Hủy</button>
+                <button style="margin: 1%;" type="button" class="btn btn-secondary btn-block mb-4"
+                    onclick="turnback()">Trở về</button>
+            </div>
+
+        </form>
+    </div>
+    <!--Footer-->
+    <button class="to-top" href="#"><i class="ti-angle-double-up"></i></button>
+    <button class="contact-btn" href="#"><a href="contact.html"><i class="ti-headphone-alt"></i></a></button>
+    <footer class="">
+        <div class="row">
+            <div class="col">
+                <h3 class="footer-tittle">Giới Thiệu</h3>
+                <p class="">
+                    <b>Nông Sản Việt</b> là hành trình của những bạn trẻ nhiệt huyết, đến từ những miền quê khác nhau,
+                    kiên trì dấn thân để cùng nhau góp phần cải thiện chuỗi cung ứng nông sản Việt và mang thực phẩm an
+                    tâm đến cho cộng đồng.
+                </p>
+            </div>
+
+            <div class="col contact-info">
+                <h3 class="footer-tittle">Thông Tin Liên Hệ</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="ti-headphone-alt"> </i>
+                        <i>0999 234 567</i>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="ti-email"> </i>
+                        <i>nongsanviet@gmail.com</i>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="ti-location-arrow"> </i>
+                        <i>Trường CNTT&TT - Đại học Cần Thơ</i>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col">
+                <img src="./img/logo.png" alt="">
+                <p class="copyright text-center">Nông Sản Việt © 2024. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!--End Footer-->
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const toTopBtn = document.querySelector(".to-top");
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 50) {
+            toTopBtn.classList.add('active');
+        } else {
+            toTopBtn.classList.remove('active');
+        }
+    })
+
+    $(document).ready(function () {
+        $('.to-top').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+        });
+    });
+
+</script>
+
+</html>

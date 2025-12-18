@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <link rel="stylesheet" href="css/invoice.css">
+  <!-- link boxicons -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+  <!-- sidebar -->
+  <div class="sidebar">
+    <head>
+      <div class="image-text">
+        <span class="image">
+           <img src="image/icon.ico" alt="logo">
+        </span>
+      </div>
+    </head>
+    <div class="menu">
+      <ul class="menu-links">
+        <li class="dashboard-link">
+            <a href="dashboard.html">
+               <i class='bx bxs-dashboard icon'></i>
+               <span class="text nav-text">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-link">
+            <a href="products.html">
+                <i class='bx bx-store icon'></i>
+               <span class="text nav-text">Sản Phẩm</span>
+            </a>
+        </li>
+        <li class="invoice-link">
+            <a href="invoice.html">
+              <i class='bx bx-cart icon' ></i>
+               <span class="text nav-text">Đơn Hàng</span>
+            </a>
+        </li>
+        <li class="bottom-content">
+            <a href="../login.html">
+              <i class='bx bx-log-out icon'></i>
+               <span class="text nav-text">Đăng xuất </span>
+            </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- invoice-content -->
+  <section class="invoice-content">
+    <div class="top">
+      <i class='bx bx-menu sidebar-toggle'></i>
+      <i class='bx bxs-user-circle logo' >
+      <i class='bx bx-bell'></i>
+      <i class='bx bx-envelope'></i>
+        </i>
+      </div>
+    <div class="cards">
+      <div class="card-single">
+        <div>
+          <h1>102</h1>
+          <span>Đã giao</span>
+        </div>
+        <div><i class="fa-solid fa-check"></i></div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card-single">
+        <div>
+          <h1>79</h1>
+          <span>Đang giao</span>
+        </div>
+        <div><i class="fa-solid fa-truck-fast"></i></div>
+      </div>
+      <!-- Card 3 -->
+      <div class="card-single">
+        <div>
+          <h1>45</h1>
+          <span>Đang xử lý</span>
+        </div>
+        <div><i class="fa-solid fa-clock"></i></div>
+      </div>
+      <!-- Card 4 -->
+      <div class="card-single">
+        <div>
+          <h1>37</h1>
+          <span>Yêu cầu mới</span>
+        </div>
+        <div><i class="fa-solid fa-file-circle-plus"></i></div>
+      </div>
+    </div>
+
+    <div class="recent-gird">
+      <div class="projects">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Đơn tháng 5/2024</h2>
+
+            </div>
+          </div>
+          <div class="card-body">
+            <table>
+              <thead>
+                <tr>
+                  <td>Mã ĐH</td>
+                  <td>Tên khách hàng</td>
+                  <td>Địa chỉ</td>
+                  <td>Thời gian đặt hàng</td>
+                  <td class="section">Trạng thái</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>DH01</td>
+                  <td>Nguyễn Văn A</td>
+                  <td>Ninh kiều,Cần Thơ</td>
+                  <td>20:35 1/5/2024</td>
+                  <td>
+                    <select name="" id="">
+                      <option value="Đang giao">Đang giao</option>
+                      <option value="Chờ xác nhận">Chờ xác nhận</option>
+                      <option value="Đã giao">Đã giao</option>
+                      <option value="Đã hủy">Đã hủy</option>
+                    </select>
+                  </td>
+                </tr>
+                <!-- -------------------------------------- -->
+                <tr>
+                  <td>DH02</td>
+                  <td>Đào thị C</td>
+                  <td>Ninh Kiều, Cần Thơ</td>
+                  <td>21:40 01/5/2024</td>
+                  <td>
+                    <select name="" id="">
+                      <option value="Đang giao">Chờ xác nhận</option>
+                      <option value="Chờ xác nhận">Đang giao</option>
+                      <option value="Đã giao">Đã giao</option>
+                      <option value="Đã hủy">Đã hủy</option>
+                    </select>
+                  </td>
+                </tr>
+                <!-- -------------------------------------- -->
+                <tr>
+                  <td>DH03</td>
+                  <td>Lê Vân D</td>
+                  <td>An Hòa , Cần Thơ</td>
+                  <td>08:20 5/5/2024</td>
+                  <td>
+                    <select name="" id="">
+                      <option value="Đang giao">Đã giao</option>
+                      <option value="Chờ xác nhận">Chờ xác nhận</option>
+                      <option value="Đã giao">Đang giao</option>
+                      <option value="Đã hủy">Đã hủy</option>
+                    </select>
+                  </td>
+                </tr>
+                <!-- -------------------------------------- -->
+                <tr>
+                  <td>DH04</td>
+                  <td>Bui thị X</td>
+                  <td>Cái Răng , Cần thơ</td>
+                  <td>17:35 4/5/2024</td>
+                  <td>
+                    <select name="" id="">
+                      <option value="Đang giao">Đã hủy</option>
+                      <option value="Chờ xác nhận">Chờ xác nhận</option>
+                      <option value="Đã giao">Đã giao</option>
+                      <option value="Đã hủy">Đang giao</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

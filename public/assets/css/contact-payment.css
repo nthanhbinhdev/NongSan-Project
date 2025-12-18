@@ -1,0 +1,171 @@
+* {
+    font-family: Quicksand, Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}   
+
+.contact-container {
+    margin: 50px;
+    margin-top: 0;
+}
+
+.title h4 {
+    color: #333;
+    font-size: 32px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+    font-weight: bolder;
+}
+
+.title h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 180px;
+    height: 2px;
+    background-color: #71B979;
+    transform: translateX(-50%);
+}
+.title p{
+    font-size: 20px;
+}
+
+.infor-item {
+    border: 1px solid #71B979;
+    border-radius: 5px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.infor-item:hover {
+    cursor: pointer;
+    background-color: #71B979;
+    color: white;
+}
+
+.infor-item .icon {
+    margin-left: 20px;
+}
+
+.infor-item i {
+    margin-left: 10px;
+}
+
+.enter-item {
+    width: 70%;
+    border: 1px solid;
+    border-radius: 10px;
+}
+
+.enter-item input {
+    width: 95%;
+    height: 30px;
+    margin: 5px;
+    margin-left: 20px;
+    border: none;
+}
+
+.enter-item input:focus {
+    outline: none;
+}
+
+.mess-error {
+    color: rgb(255, 100, 100);
+    font-style: italic;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.confirm-btn {
+    border: 1px solid #71B979;
+    background-color: #71B979;
+    border-radius: 25px;
+    height: 40px;
+    width: 130px;
+    color: white;
+    margin-top: 10px;
+}
+
+.confirm-btn:hover {
+    background-color: white;
+    color: #71B979;
+}
+
+#clear-infor {
+    border: 1px solid rgb(255, 100, 100);
+    background-color: white;
+    border-radius: 25px;
+    height: 40px;
+    width: 65px;
+    color: rgb(255, 100, 100);
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+#clear-infor:hover {
+    background-color: rgb(255, 100, 100);
+    color: white;
+}
+
+.error {
+    border: 1px solid rgb(255, 100, 100);
+}
+
+.error input::placeholder, .error textarea::placeholder {
+    color: rgb(255, 100, 100);
+}
+
+.payment-container .enter-item{
+    width: 80%;
+}
+
+.enter-item textarea {
+    width: 93%;
+    margin: 5px;
+    margin-left: 20px;
+    border: none;
+    resize: none;
+}
+
+.enter-item textarea:focus {
+    outline: none;
+}
+
+.titleDetailPayment {
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.cost-container {
+    height: 20px;
+    margin-bottom: 4px;
+}
+
+.cost {
+    display: inline-block;
+    text-decoration:line-through;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.discount {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.current-price {
+    display: inline;
+    font-weight: bold;
+}
+
+.enter-infor-container {
+    padding-left: 120px;
+}

@@ -1,0 +1,173 @@
+* {
+    font-family: Quicksand, Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slider .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#goToProduct {
+    text-align: right;
+}
+
+#goToProduct a {
+    border-radius: 10px;
+    padding: 5px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #71B979;
+
+}
+
+#goToProduct a:hover {
+    color: forestgreen;
+    text-decoration: underline;
+}
+
+.kop-list-container .col {
+    margin: 10px;
+    border: 2px solid white;
+    border-radius: 20px;
+}
+
+.kop-list-container .col:hover {
+    border-color: #71B979;
+}
+
+.kop-list-container .kop:hover {
+    color: #71B979 !important;
+}
+
+.kop-list img {
+    width: 200px;
+}
+
+.kop-list a {
+    text-decoration: none;
+}
+
+main h2 {
+    text-transform: uppercase;
+}
+
+.infor-container {
+    margin: 10px;
+    border-radius: 30px;
+}
+
+.infor {
+    margin: 50px;
+}
+
+.infor .title {
+    background-color: #71B979;
+    font-size: 30px;
+    border-radius: 5px;
+}
+
+.infor img {
+    width: 400px;
+    border-radius: 5px;
+}
+
+.infor .content {
+    margin-left: 50px;
+    margin-right: 50px;
+    text-align: justify;
+}
+
+.title {
+    text-align: center;
+}
+
+.title h4 {
+    color: #333;
+    font-size: 32px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.title h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 140px;
+    height: 2px;
+    background-color: #71B979;
+    transform: translateX(-50%);
+}
+
+.hot-news {
+    margin-bottom: 50px;
+}
+
+.hot-news .button {
+    color: white;
+    background-color: #71B979;
+    border-radius: 30px;
+    height: 70px;
+    width: 40px;
+}
+
+.hot-news .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.hot-news .swiper {
+    width: 100%;
+    height: 500px;
+    margin: 20px auto;
+}
+
+.hot-news a {
+    text-decoration: none;
+    color: black;
+}
+
+.list-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}   
+
+.list-title:hover {
+    cursor: pointer;
+    color: #71B979;
+}
+
+.list-content {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.list-item div {
+    margin-right: 10px;
+    text-align: justify;
+}
