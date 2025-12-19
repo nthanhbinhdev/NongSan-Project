@@ -7,6 +7,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "verify": "node scripts/verifySetup.js",
+    "test-mongo": "node scripts/testMongoDB.js",
     "seed-users": "node scripts/createFirebaseUsers.js",
     "seed-products": "node scripts/seedProducts.js",
     "seed-orders": "node scripts/seedOrders.js",
