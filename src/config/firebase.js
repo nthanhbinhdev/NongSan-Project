@@ -26,4 +26,5 @@ if (serviceAccountKey) {
   }
 }
 
-module.exports = admin;
+const auth = admin.auth(); // Khởi tạo dịch vụ Auth
+module.exports = { admin, auth };
