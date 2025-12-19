@@ -1,15 +1,30 @@
-// src/config/firebase.js
 const admin = require("firebase-admin");
-const path = require("path");
 
-// Đường dẫn đến file key bạn vừa tải về
-const serviceAccount = require(path.join(__dirname, "serviceAccountKey.json"));
+// Đoạn này quan trọng: Kiểm tra xem có biến môi trường không
+const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+if (serviceAccountKey) {
+  // TRƯỜNG HỢP 1: Chạy trên Render (Production)
+  try {
+    const serviceAccount = JSON.parse(serviceAccountKey);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+    console.log("🔥 Kết nối Firebase thành công qua biến môi trường!");
+  } catch (error) {
+    console.error("❌ Lỗi parse JSON Firebase key:", error);
+  }
+} else {
+  // TRƯỜNG HỢP 2: Chạy ở máy Bình (Local)
+  try {
+    const serviceAccount = require("./serviceAccountKey.json");
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+    console.log("💻 Kết nối Firebase thành công qua file Local!");
+  } catch (error) {
+    console.warn("⚠️ Không tìm thấy key Firebase (Cả biến môi trường lẫn file local).");
+  }
+}
 
-const auth = admin.auth(); // Export auth để dùng xác thực user
-const db = admin.firestore(); // Export firestore (nếu cần dùng db của firebase, nhưng ta đang dùng MongoDB)
-
-module.exports = { admin, auth };
+module.exports = admin;
