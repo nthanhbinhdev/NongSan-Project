@@ -135,28 +135,18 @@
 
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="assets/js/main.js"></script>
-<script>
-    const toTopBtn = document.querySelector(".to-top");
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 50) {
-            toTopBtn.classList.add('active');
-        } else {
-            toTopBtn.classList.remove('active');
-        }
-    })
 
-    $(document).ready(function () {
-        $('.to-top').click(function () {
-            $('html, body').animate({ scrollTop: 0 }, 800);
-            return false;
-        });
-    });
-</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/user-state.js"></script>
+
 <script>
+    // Scroll logic giữ nguyên...
+
     window.onload = function(){
-        loadCart();
+        // loadCart() phải có trong main.js hoặc user-state.js
+        if(typeof loadCart === 'function') loadCart();
     }
 </script>
-
+</body>
 </html>

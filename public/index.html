@@ -333,17 +333,13 @@
 
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="assets/js/main.js"></script>
-<script src="assets/js/user-state.js"></script>
-
-
-<!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!--JQuery-->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!--Scroll To Top JS-->
+<script src="assets/js/main.js"></script>
+<script src="assets/js/api.js"></script> <script src="assets/js/user-state.js"></script>
+
 <script>
+    // Scroll To Top Logic
     const toTopBtn = document.querySelector(".to-top");
     window.addEventListener('scroll', () => {
         if (window.pageYOffset > 50) {
@@ -360,43 +356,30 @@
         });
     });
 
-</script>
-<!-- Initialize Swiper Slider-->
-<script>
-    var swiper = new Swiper(".mySwiper", {
+    // Initialize Swiper Slider
+    var swiperBanner = new Swiper(".mySwiper", {
         spaceBetween: 0,
         centeredSlides: true,
-        autoplay: {
-            delay: 2500,
-            disableOnInteraction: false,
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
+        autoplay: { delay: 2500, disableOnInteraction: false },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
     });
-</script>
 
-<!-- Initialize Swiper Hot News-->
-<script>
-    var swiper = new Swiper(".hot-news", {
+    // Initialize Swiper Hot News
+    var swiperNews = new Swiper(".hot-news", {
         slidesPerView: 3,
         centeredSlides: false,
         spaceBetween: 30,
-        pagination: {
-            el: ".swiper-pagination",
-            type: "fraction",
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
+        pagination: { el: ".swiper-pagination", type: "fraction" },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
     });
-</script>
-<script>
+
+    // Main Init
     window.onload = function(){
-        searchProduct(['TC002', 'RL001', 'CQ001', 'N004']);
+        // Gọi hàm từ api.js hoặc main.js
+        if(typeof searchProduct === 'function') {
+             searchProduct(['TC002', 'RL001', 'CQ001', 'N004']);
+        }
     }
 </script>
-
+</body>
 </html>

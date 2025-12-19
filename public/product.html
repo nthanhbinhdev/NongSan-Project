@@ -193,15 +193,16 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="assets/js/dropdown.js"></script>
+
 <script src="assets/js/main.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/user-state.js"></script>
+
+<script src="assets/js/dropdown.js"></script>
 <script src="assets/js/product-page.js"></script>
+
 <script>
-    window.onload = function () {
-        searchProduct();
-    }
-</script>
-<script>
+    // Scroll to top logic (Giữ nguyên như cũ)
     const toTopBtn = document.querySelector(".to-top");
     window.addEventListener('scroll', () => {
         if (window.pageYOffset > 50) {
@@ -217,12 +218,14 @@
             return false;
         });
     });
-</script>
-<script>
+
+    // Init
     window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
-        searchProduct(category == null ? '' : category)
+        // searchProduct nằm trong product-page.js hoặc main.js
+        searchProduct(category == null ? '' : category);
     }
 </script>
+</body>
 </html>
