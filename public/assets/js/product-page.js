@@ -16,8 +16,15 @@ async function loadProducts(params = {}) {
       ...params,
     });
 
-    currentProducts = response.data;
-    totalPages = response.pagination.pages;
+    if (Array.isArray(response)) {
+      // Trường hợp 1: Backend trả về mảng trực tiếp (như log ông vừa thấy)
+      currentProducts = response;
+      totalPages = 1; // Vì trả về hết 1 cục nên coi như chỉ có 1 trang
+    } else {
+      // Trường hợp 2: Backend trả về object chuẩn (có phân trang)
+      currentProducts = response.data || [];
+      totalPages = response.pagination?.pages || 1;
+    }
 
     displayProducts(currentProducts);
     updatePagination();
