@@ -101,20 +101,32 @@ router.get("/", async (req, res) => {
 });
 
 // ===== GET: Lấy chi tiết 1 sản phẩm =====
+// File: src/routes/productRoutes.js
+
 router.get("/:id", async (req, res) => {
   try {
+    // 👇 Thêm dòng này để debug xem ID server nhận được là gì
+    console.log("🔍 Backend nhận ID:", req.params.id);
+
+    // Kiểm tra ID có đúng chuẩn MongoDB không (24 ký tự hex)
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "ID sản phẩm không hợp lệ" });
+    }
+
     const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Không tìm thấy sản phẩm",
+        message: "Không tìm thấy sản phẩm trong Database",
       });
     }
 
     res.json({ success: true, data: product });
   } catch (error) {
-    console.error("Lỗi GET /products/:id:", error);
+    console.error("❌ Lỗi Backend:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
