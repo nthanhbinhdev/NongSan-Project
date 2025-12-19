@@ -2,7 +2,9 @@
 // public/Admin/js/admin-handler.js - FIXED VERSION
 // ============================================================
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = window.location.hostname === "localhost" 
+  ? "http://localhost:3000" 
+  : "";
 
 // ===== Kiểm tra quyền admin =====
 function checkAdminAccess() {
