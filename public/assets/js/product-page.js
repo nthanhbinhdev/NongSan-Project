@@ -1,8 +1,3 @@
-// ============================================================
-// public/assets/js/product-page.js - XỬ LÝ TRANG SẢN PHẨM
-// Thêm file này vào product.html: <script src="assets/js/product-page.js"></script>
-// ============================================================
-
 let currentProducts = [];
 let currentPage = 1;
 let totalPages = 1;
