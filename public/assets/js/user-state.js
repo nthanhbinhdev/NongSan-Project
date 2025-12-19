@@ -5,69 +5,54 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function updateUserInterface() {
-  // 1. Lấy thông tin user từ localStorage
   const userStr = localStorage.getItem("user");
-  const authContainer = document.querySelector(".navbar-collapse .navbar-nav"); // Chỗ chứa các menu
-
-  if (!authContainer) return;
+  
+  // 1. Tìm đúng cái menu dropdown trong HTML của ông
+  const accountDropdown = document.querySelector(".account-dropdown");
+  
+  if (!accountDropdown) return; // Không thấy menu thì thôi
 
   if (userStr) {
-    // --- TRƯỜNG HỢP ĐÃ ĐĂNG NHẬP ---
+    // --- ĐÃ ĐĂNG NHẬP ---
     const user = JSON.parse(userStr);
 
-    // Tìm các nút Đăng nhập/Đăng ký cũ để ẩn đi (nếu cần xử lý kỹ hơn)
-    // Ở đây tôi dùng cách thay thế HTML của nút cuối cùng (thường là nút Login)
+    // Thay đổi danh sách <li> bên trong dropdown
+    accountDropdown.innerHTML = `
+        <li><span class="dropdown-item-text fw-bold text-success" style="font-size: 0.9rem">Xin chào, ${user.fullName}</span></li>
+        <li><hr class="dropdown-divider"></li>
+        ${user.role === 'admin' ? '<li><a class="dropdown-item" href="/admin">Trang quản trị</a></li>' : ''}
+        <li><a class="dropdown-item" href="profile.html">Hồ sơ cá nhân</a></li>
+        <li><a class="dropdown-item" href="orders.html">Đơn mua</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#" id="logout-btn">Đăng xuất</a></li>
+    `;
 
-    // Tạo HTML hiển thị tên user và nút đăng xuất
-    const loggedInHtml = `
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle fw-bold text-success" href="#" role="button" data-bs-toggle="dropdown">
-                    Xin chào, ${user.fullName}
-                </a>
-                <ul class="dropdown-menu">
-                    ${
-                      user.role === "admin"
-                        ? '<li><a class="dropdown-item" href="/Admin/dashboard.html">Trang quản trị</a></li>'
-                        : ""
-                    }
-                    <li><a class="dropdown-item" href="#">Hồ sơ cá nhân</a></li>
-                    <li><a class="dropdown-item" href="#">Đơn mua</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="#" id="logout-btn">Đăng xuất</a></li>
-                </ul>
-            </li>
-        `;
-
- 
-    const loginBtn = authContainer.querySelector('a[href="login.html"]');
-    if (loginBtn) {
-      // Thay thế thẻ <li> chứa nút login bằng dropdown user
-      const liParent = loginBtn.closest("li");
-      liParent.outerHTML = loggedInHtml;
+    // Gắn lại sự kiện logout (vì nút logout mới vừa được tạo ra bằng HTML string)
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleLogout();
+      });
     }
 
-    // Gắn sự kiện Đăng xuất
-    setTimeout(() => {
-      const logoutBtn = document.getElementById("logout-btn");
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          handleLogout();
-        });
-      }
-    }, 500);
   } else {
-    // --- TRƯỜNG HỢP CHƯA ĐĂNG NHẬP ---
-    // Giữ nguyên hoặc đảm bảo nút đăng nhập hiển thị
+    // --- CHƯA ĐĂNG NHẬP ---
+    // Đảm bảo menu hiển thị Login/Signup (Phòng trường hợp user vừa logout xong)
+    accountDropdown.innerHTML = `
+        <li><a class="dropdown-item text-secondary" href="login.html">Đăng Nhập</a></li>
+        <li><a class="dropdown-item text-secondary" href="signup.html">Đăng Ký</a></li>
+    `;
   }
 }
 
 function handleLogout() {
-  // Xóa token và thông tin user
   localStorage.removeItem("accessToken");
   localStorage.removeItem("user");
+  
+  // Xóa giỏ hàng local để tránh lộ thông tin (hoặc giữ lại tùy nghiệp vụ)
+  // localStorage.removeItem("cart"); 
 
-  // Tải lại trang để cập nhật giao diện
   alert("Đã đăng xuất!");
-  window.location.href = "/index.html";
+  window.location.href = "index.html";
 }

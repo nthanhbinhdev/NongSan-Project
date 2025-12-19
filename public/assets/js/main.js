@@ -3,7 +3,6 @@
 // ============================================================
 
 const BASE_URL = "http://localhost:3000";
-
 let allProducts = [];
 
 // ===== INIT: Load sản phẩm từ API =====

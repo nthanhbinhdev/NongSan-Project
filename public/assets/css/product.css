@@ -78,6 +78,7 @@
 
 .menu-filter.active .cell {
     opacity: 1;
+    margin-bottom: 20px;
 }   
 
 .menu-filter .cell {

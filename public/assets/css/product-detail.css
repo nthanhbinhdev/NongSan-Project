@@ -1,204 +1,235 @@
+/* =========================================
+   FIXED BY MÍT - PRODUCT DETAIL CSS
+   ========================================= */
+
+/* Cấu trúc chính */
 .product-main {
-    line-height: 1.5;
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  line-height: 1.5;
+  box-sizing: border-box;
+  padding: 20px 0; /* Thêm khoảng cách trên dưới */
+  background-color: #f8f9fa; /* Màu nền nhẹ cho nổi bật card */
+  min-height: 80vh;
 }
 
-.product-main img {
-    width: 100%;
-    display: block;
-    margin-bottom: 100px;
-    border: 1px solid darkgray;
-    border-radius: 10px;
-}
-
+/* Container bao quanh card */
 .card-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-    margin-top: -100px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+  /* Đã xóa margin-top: -100px gây lỗi */
+}
+
+/* Thẻ Card chứa nội dung */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Đổ bóng cho đẹp */
+  overflow: hidden; /* Tránh nội dung tràn ra ngoài */
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- PHẦN HÌNH ẢNH --- */
+.product-imgs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
 }
 
 .img-display {
-    overflow: hidden;
-    width: 400px;
-    margin-left: 60px;
-    margin-top: -100px;
-    margin-bottom: 50px;
+  overflow: hidden;
+  width: 100%; /* Fix: Để ảnh full chiều rộng cột chứa nó */
+  border-radius: 10px;
+  margin-bottom: 15px;
+  /* Đã xóa margin-top và margin-left cứng */
 }
 
 .img-showcase {
-    display: flex;
-    width: 100%;
-    transition: all 0.5s ease;
+  display: flex;
+  width: 100%;
+  transition: all 0.5s ease;
 }
 
 .img-showcase img {
-    min-width: 100%;
-    border: none;
+  min-width: 100%;
+  display: block;
+  object-fit: cover; /* Giúp ảnh không bị méo */
 }
 
+/* Danh sách ảnh nhỏ (Thumbnails) */
 .img-select {
-    display: flex;
+  display: flex;
+  gap: 10px; /* Khoảng cách giữa các ảnh nhỏ */
+  justify-content: center;
 }
 
 .img-item {
-    margin: 0.3rem;
+  width: 80px; /* Kích thước cố định cho ảnh nhỏ */
+  height: 80px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-.img-item:nth-child(1),
-.img-item:nth-child(2),
-.img-item:nth-child(3) {
-    margin-right: 0;
+.img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .img-item:hover {
-    opacity: 0.8;
+  opacity: 0.8;
+  border-color: #256eff;
 }
 
+/* --- PHẦN NỘI DUNG TEXT --- */
 .product-content {
-    padding: 2rem 1rem;
+  padding: 2rem;
 }
 
 .product-detail-title {
-    font-weight: bold;
-    margin-top: 20px;
-    font-size: 32px;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #12263a;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
 .product-rating {
-    color: #ffc107;
+  color: #ffc107;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
 .product-rating span {
-    font-weight: 600;
-    color: #252525;
+  font-weight: 600;
+  color: #252525;
+  margin-left: 5px;
 }
 
+/* Giá cả */
 .product-price {
-    margin: 0.5rem 0;
-    font-size: 1rem;
+  margin: 1rem 0;
 }
 
 .cost-container {
-    height: 20px;
-    margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
 }
 
 .cost {
-    display: inline-block;
-    text-decoration:line-through;
-    font-style: italic;
-    font-size: 14px;
+  text-decoration: line-through;
+  color: #6c757d;
+  font-size: 1.1rem;
 }
 
 .discount {
-    display: inline-block;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    align-items: center;
-    margin-left: 5px;
+  background-color: #dc3545;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
 .current-price {
-    display: inline;
-    color: #256eff;
-    font-size: 1.7rem;
-    font-weight: 600;
+  color: #256eff;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
-.product-detail h2 {
-    text-transform: capitalize;
-    color: #12263a;
-    padding-bottom: 0.6rem;
-    padding-top: 0.5rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.product-detail p {
-    font-size: 18px;
-    padding: 0.3rem;
-    opacity: 0.8;
-}
-
-.product-detail ul {
-    margin: 1rem 0;
-    font-size: 1rem;
-}
-
-.product-detail ul li {
-    margin: 0;
-    list-style: none;
-    background-size: 18px;
-    padding-left: 1.7rem;
-    margin: 0.4rem 0;
-    font-weight: 600;
-    opacity: 0.9;
-}
-
-.product-detail ul li span {
-    font-weight: 400;
-}
-
+/* Nút mua hàng */
 .purchase-info {
-    margin: 1.5rem 0;
-}
-
-.purchase-info input,
-.purchase-info .buttn {
-    border: 1.5px solid #ddd;
-    border-radius: 10px;
-    text-align: center;
-    padding: 0.45rem 0.8rem;
-    outline: 0;
-    margin-right: 0.2rem;
-    margin-bottom: 1rem;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .purchase-info input {
-    width: 60px;
+  width: 60px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .purchase-info .buttn {
-    cursor: pointer;
-    color: #fff;
-}
-
-.purchase-info .buttn:first-of-type {
-    background: #256eff;
-}
-
-.purchase-info .buttn:last-of-type {
-    background: #f64749;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  background: #256eff; /* Màu xanh chủ đạo */
+  color: #fff;
+  font-size: 1rem;
 }
 
 .purchase-info .buttn:hover {
-    opacity: 0.9;
+  background: #1a54ca;
 }
 
-@media  screen and (min-width: 992px) {
+/* Thông tin chi tiết */
+.product-detail h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.product-detail p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.product-detail ul {
+  list-style: none;
+  padding: 0;
+}
+
+.product-detail ul li {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.product-detail ul li span {
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+/* --- RESPONSIVE (Desktop) - ĐÃ FIX KHOẢNG CÁCH --- */
+@media screen and (min-width: 992px) {
     .card {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 1.5rem;
+        grid-template-columns: 10fr 1fr; /* Chia đôi: Ảnh - Chữ */
+        grid-gap: 0rem; /* Tăng khoảng cách giữa ảnh và chữ cho thoáng */
+        padding: 2rem;
     }
 
     .card-wrapper {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .product-imgs {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        /* FIX: Bỏ căn giữa dọc để đẩy nội dung lên trên */
+        height: auto;
+        min-height: auto;
+        display: flex; /* Trở về dạng block bình thường */
+        padding-top: 20px; /* Cách header một chút xíu thôi */
+        padding-bottom: 50px; /* Khoảng hở bên dưới chân trang */
     }
 
     .product-content {
-        padding-top: 0;
+        padding: 0;
+        display: flex;
+
+        flex-direction: column; /* Căn nội dung lên trên cùng */
     }
 }
