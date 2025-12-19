@@ -1,40 +1,97 @@
-# --- Dependencies ---
-node_modules/
-package-lock.json
-# (Giữ package-lock.json nếu bạn muốn đồng bộ version chính xác, nhưng thường bỏ qua nếu team nhỏ)
+# ============================================================
+# .gitignore - KHÔNG PUSH CÁC FILE NHẠY CẢM LÊN GIT
+# ============================================================
 
-# --- Environment Variables (BẢO MẬT: CỰC KỲ QUAN TRỌNG) ---
+# ===== Environment Variables =====
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.development
+.env.production
+.env.test
 
-# --- Logs ---
+# ===== Firebase Credentials =====
+src/config/serviceAccountKey.json
+**/serviceAccountKey.json
+firebase-debug.log
+.firebase/
+
+# ===== Dependencies =====
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ===== Logs =====
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-logs
-*.log
+lerna-debug.log*
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# --- Firebase ---
-.firebase/
-firebase-debug.log
+# ===== Testing =====
+coverage/
+.nyc_output/
+.grunt
+lib-cov
 
-# --- IDE / System Files ---
-.idea/
+# ===== Build & Temp Files =====
+dist/
+build/
+.tmp/
+*.tmp
+.cache/
+.parcel-cache/
+
+# ===== IDE & Editor =====
 .vscode/
+.idea/
 *.swp
+*.swo
+*~
 .DS_Store
 Thumbs.db
 
-# --- Uploads (Lưu ảnh local) ---
-# Chúng ta ignore các file ảnh để không nặng git
-public/uploads/*
+# ===== OS =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
 
-# NHƯNG giữ lại file .gitkeep để git vẫn tạo thư mục uploads khi clone về
+# ===== Uploads =====
+public/uploads/*
 !public/uploads/.gitkeep
 
-# --- Firebase Service Account Key ---
-src/config/serviceAccountKey.json
+# ===== Database =====
+*.sqlite
+*.sqlite3
+*.db
 
+# ===== Optional =====
+.npm
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# ===== TypeScript (nếu có) =====
+*.tsbuildinfo
+
+# ===== Next.js (nếu có) =====
+.next/
+out/
+
+# ===== Vercel =====
+.vercel
+
+# ===== Miscellaneous =====
+.env.backup
+*.bak
+*.orig

@@ -6,13 +6,19 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "seed": "node scripts/seedData.js",
+    "verify": "node scripts/verifySetup.js",
+    "seed-users": "node scripts/createFirebaseUsers.js",
+    "seed-products": "node scripts/seedProducts.js",
+    "seed-orders": "node scripts/seedOrders.js",
+    "seed-all": "node scripts/seedAll.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "nong-san",
     "ecommerce",
-    "vietnam"
+    "vietnam",
+    "agriculture",
+    "fresh-produce"
   ],
   "author": "Nông Sản Việt Team",
   "license": "ISC",
