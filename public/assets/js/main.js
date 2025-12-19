@@ -2,7 +2,10 @@
 // public/assets/js/main.js - FIXED VERSION
 // ============================================================
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = window.location.hostname === "localhost" 
+  ? "http://localhost:3000" 
+  : ""; // Production dùng relative URL
+
 let allProducts = [];
 
 // ===== INIT: Load sản phẩm từ API =====
