@@ -1,0 +1,57 @@
+<div class="container mt-4">
+    <h2>Thêm Sản Phẩm Mới</h2>
+    <form id="add-product-form">
+        <div class="mb-3">
+            <label class="form-label">Tên sản phẩm</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Giá (VNĐ)</label>
+            <input type="number" class="form-control" name="price" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Danh mục</label>
+            <select class="form-select" name="category">
+                <option value="Rau">Rau sạch</option>
+                <option value="Cu">Củ</option>
+                <option value="Qua">Trái cây</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ảnh sản phẩm</label>
+            <input type="file" class="form-control" name="image" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <textarea class="form-control" name="description" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Dùng FormData để gửi cả text và file ảnh
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('/api/products', {
+                method: 'POST',
+                body: formData // Không cần set Content-Type header khi dùng FormData
+            });
+
+            if (response.ok) {
+                alert('Thêm sản phẩm thành công!');
+                e.target.reset(); // Xóa trắng form
+            } else {
+                const result = await response.json();
+                alert('Lỗi: ' + result.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Lỗi kết nối server');
+        }
+    });
+</script>

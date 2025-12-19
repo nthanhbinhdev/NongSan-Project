@@ -37,3 +37,4 @@ public/uploads/*
 
 # --- Firebase Service Account Key ---
 src/config/serviceAccountKey.json
+

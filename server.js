@@ -25,17 +25,16 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 // 3. Kết nối MongoDB
 mongoose
   .connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/nongsanviet")
-  .then(() => console.log("✅ Đã kết nối MongoDB"))
-  .catch((err) => console.error("❌ Lỗi kết nối MongoDB:", err));
+  .then(() => console.log("Đã kết nối MongoDB"))
+  .catch((err) => console.error("Lỗi kết nối MongoDB:", err));
 
 // 4. Cấu hình API Routes (QUAN TRỌNG: Phải đặt trước route '*')
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes); // Route đăng ký/đăng nhập
 
-// 5. Route mặc định cho Frontend (SPA)
-// Mọi đường dẫn không phải API hay file tĩnh sẽ trả về index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// Route mặc định trả về trang chủ
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // 6. Start Server
