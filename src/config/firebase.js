@@ -1,29 +1,28 @@
 const admin = require("firebase-admin");
 
-// Đoạn này quan trọng: Kiểm tra xem có biến môi trường không
 const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT;
 
 if (serviceAccountKey) {
-  // TRƯỜNG HỢP 1: Chạy trên Render (Production)
+  // Production: Dùng biến môi trường
   try {
     const serviceAccount = JSON.parse(serviceAccountKey);
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
-    console.log("🔥 Kết nối Firebase thành công qua biến môi trường!");
+    console.log("🔥 Firebase Production OK!");
   } catch (error) {
-    console.error("❌ Lỗi parse JSON Firebase key:", error);
+    console.error("❌ Lỗi Firebase:", error);
   }
 } else {
-  // TRƯỜNG HỢP 2: Chạy ở máy Bình (Local)
+  // Development: Dùng file local
   try {
     const serviceAccount = require("./serviceAccountKey.json");
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
-    console.log("💻 Kết nối Firebase thành công qua file Local!");
+    console.log("💻 Firebase Local OK!");
   } catch (error) {
-    console.warn("⚠️ Không tìm thấy key Firebase (Cả biến môi trường lẫn file local).");
+    console.warn("⚠️ Không tìm thấy Firebase key");
   }
 }
 
