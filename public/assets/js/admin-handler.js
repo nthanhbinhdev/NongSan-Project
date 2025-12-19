@@ -1,8 +1,10 @@
 // ============================================================
-// public/Admin/js/admin-handler.js - XỬ LÝ ADMIN PANEL
+// public/Admin/js/admin-handler.js - FIXED VERSION
 // ============================================================
 
-// Kiểm tra quyền admin khi load trang
+const BASE_URL = "http://localhost:3000";
+
+// ===== Kiểm tra quyền admin =====
 function checkAdminAccess() {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("accessToken");
@@ -12,30 +14,24 @@ function checkAdminAccess() {
     window.location.href = "/login.html";
     return false;
   }
-
   return true;
 }
 
-// ============================================================
-// QUẢN LÝ SẢN PHẨM
-// ============================================================
-
-// Load danh sách sản phẩm
+// ===== QUẢN LÝ SẢN PHẨM =====
 async function loadProductsAdmin() {
   try {
-    const response = await fetch("/api/products?limit=100");
+    const response = await fetch(`${BASE_URL}/api/products?limit=100`);
     const result = await response.json();
 
     if (result.success) {
       displayProductsAdmin(result.data);
     }
   } catch (error) {
-    console.error("Lỗi load sản phẩm:", error);
+    console.error("❌ Lỗi load sản phẩm admin:", error);
     alert("Không thể tải danh sách sản phẩm");
   }
 }
 
-// Hiển thị sản phẩm trong bảng admin
 function displayProductsAdmin(products) {
   const container = document.getElementById("admin-products-list");
   if (!container) return;
@@ -60,7 +56,7 @@ function displayProductsAdmin(products) {
     const priceAfterDiscount = product.price * (1 - product.discount);
     html += `
       <tr>
-        <td>${product.id}</td>
+        <td>${product.id || product._id}</td>
         <td>${product.name}</td>
         <td><img src="${product.image}" width="50" alt="${product.name}"></td>
         <td>${formatPrice(priceAfterDiscount)}đ</td>
@@ -82,63 +78,49 @@ function displayProductsAdmin(products) {
     `;
   });
 
-  html += `
-      </tbody>
-    </table>
-  `;
-
+  html += `</tbody></table>`;
   container.innerHTML = html;
 }
 
-// Xóa sản phẩm
 async function deleteProduct(productId, productName) {
-  if (!confirm(`Bạn có chắc muốn xóa sản phẩm "${productName}"?`)) {
-    return;
-  }
+  if (!confirm(`Bạn có chắc muốn xóa sản phẩm "${productName}"?`)) return;
 
   try {
     const token = localStorage.getItem("accessToken");
-    const response = await fetch(`/api/products/${productId}`, {
+    const response = await fetch(`${BASE_URL}/api/products/${productId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     const result = await response.json();
 
     if (result.success) {
       alert("✅ Xóa sản phẩm thành công!");
-      loadProductsAdmin(); // Reload danh sách
+      loadProductsAdmin();
     } else {
       alert("❌ Lỗi: " + result.message);
     }
   } catch (error) {
-    console.error("Lỗi xóa sản phẩm:", error);
+    console.error("❌ Lỗi xóa sản phẩm:", error);
     alert("Có lỗi xảy ra khi xóa sản phẩm");
   }
 }
 
-// ============================================================
-// QUẢN LÝ ĐƠN HÀNG
-// ============================================================
-
-// Load danh sách đơn hàng
+// ===== QUẢN LÝ ĐƠN HÀNG =====
 async function loadOrdersAdmin() {
   try {
-    const response = await fetch("/api/orders?limit=50");
+    const response = await fetch(`${BASE_URL}/api/orders?limit=50`);
     const result = await response.json();
 
     if (result.success) {
       displayOrdersAdmin(result.data);
     }
   } catch (error) {
-    console.error("Lỗi load đơn hàng:", error);
+    console.error("❌ Lỗi load đơn hàng:", error);
     alert("Không thể tải danh sách đơn hàng");
   }
 }
 
-// Hiển thị đơn hàng trong bảng admin
 function displayOrdersAdmin(orders) {
   const container = document.getElementById("admin-orders-list");
   if (!container) return;
@@ -189,15 +171,10 @@ function displayOrdersAdmin(orders) {
     `;
   });
 
-  html += `
-      </tbody>
-    </table>
-  `;
-
+  html += `</tbody></table>`;
   container.innerHTML = html;
 }
 
-// Lấy badge trạng thái
 function getStatusBadge(status) {
   const statusMap = {
     pending: '<span class="badge bg-warning">Chờ xử lý</span>',
@@ -206,11 +183,9 @@ function getStatusBadge(status) {
     delivered: '<span class="badge bg-success">Đã giao</span>',
     cancelled: '<span class="badge bg-danger">Đã hủy</span>',
   };
-
   return statusMap[status] || status;
 }
 
-// Cập nhật trạng thái đơn hàng
 async function updateOrderStatus(orderId, currentStatus) {
   const statusOptions = [
     "pending",
@@ -227,23 +202,12 @@ async function updateOrderStatus(orderId, currentStatus) {
     cancelled: "Đã hủy",
   };
 
-  // Tạo select options
-  let options = "";
-  statusOptions.forEach((status) => {
-    const selected = status === currentStatus ? "selected" : "";
-    options += `<option value="${status}" ${selected}>${statusNames[status]}</option>`;
-  });
-
-  // Hiển thị dialog
   const newStatus = prompt(
     `Chọn trạng thái mới (nhập: pending, confirmed, shipping, delivered, cancelled):`,
     currentStatus
   );
 
-  if (!newStatus || newStatus === currentStatus) {
-    return;
-  }
-
+  if (!newStatus || newStatus === currentStatus) return;
   if (!statusOptions.includes(newStatus)) {
     alert("Trạng thái không hợp lệ!");
     return;
@@ -251,7 +215,7 @@ async function updateOrderStatus(orderId, currentStatus) {
 
   try {
     const token = localStorage.getItem("accessToken");
-    const response = await fetch(`/api/orders/${orderId}/status`, {
+    const response = await fetch(`${BASE_URL}/api/orders/${orderId}/status`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -264,20 +228,19 @@ async function updateOrderStatus(orderId, currentStatus) {
 
     if (result.success) {
       alert("✅ Cập nhật trạng thái thành công!");
-      loadOrdersAdmin(); // Reload danh sách
+      loadOrdersAdmin();
     } else {
       alert("❌ Lỗi: " + result.message);
     }
   } catch (error) {
-    console.error("Lỗi cập nhật trạng thái:", error);
+    console.error("❌ Lỗi cập nhật trạng thái:", error);
     alert("Có lỗi xảy ra khi cập nhật trạng thái");
   }
 }
 
-// Xem chi tiết đơn hàng
 async function viewOrderDetail(orderId) {
   try {
-    const response = await fetch(`/api/orders/${orderId}`);
+    const response = await fetch(`${BASE_URL}/api/orders/${orderId}`);
     const result = await response.json();
 
     if (result.success) {
@@ -296,67 +259,70 @@ async function viewOrderDetail(orderId) {
       });
 
       const detailHtml = `
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5>Chi tiết đơn hàng ${order.orderNumber}</h5>
-            </div>
-            <div class="modal-body">
-              <h6>Thông tin khách hàng:</h6>
-              <p>Tên: ${order.customer.name}</p>
-              <p>SĐT: ${order.customer.phone}</p>
-              <p>Email: ${order.customer.email || "N/A"}</p>
-              <p>Địa chỉ: ${order.customer.address}</p>
-              
-              <h6>Sản phẩm:</h6>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Tên</th>
-                    <th>SL</th>
-                    <th>Đơn giá</th>
-                    <th>Thành tiền</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${itemsHtml}
-                </tbody>
-              </table>
-              
-              <p><strong>Tổng tiền: ${formatPrice(
-                order.finalAmount
-              )}đ</strong></p>
-            </div>
-          </div>
-        </div>
+        <h5>Chi tiết đơn hàng ${order.orderNumber}</h5>
+        <h6>Thông tin khách hàng:</h6>
+        <p>Tên: ${order.customer.name}</p>
+        <p>SĐT: ${order.customer.phone}</p>
+        <p>Email: ${order.customer.email || "N/A"}</p>
+        <p>Địa chỉ: ${order.customer.address}</p>
+        
+        <h6>Sản phẩm:</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tên</th>
+              <th>SL</th>
+              <th>Đơn giá</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>${itemsHtml}</tbody>
+        </table>
+        
+        <p><strong>Tổng tiền: ${formatPrice(order.finalAmount)}đ</strong></p>
       `;
 
       alert(detailHtml); // Hoặc hiển thị trong modal
     }
   } catch (error) {
-    console.error("Lỗi xem chi tiết:", error);
+    console.error("❌ Lỗi xem chi tiết:", error);
   }
 }
 
-// ============================================================
-// HELPER FUNCTIONS
-// ============================================================
+// ===== DASHBOARD STATS =====
+async function loadDashboardStats() {
+  try {
+    const [productsRes, ordersRes] = await Promise.all([
+      fetch(`${BASE_URL}/api/products?limit=1`),
+      fetch(`${BASE_URL}/api/orders?limit=1`),
+    ]);
 
+    const products = await productsRes.json();
+    const orders = await ordersRes.json();
+
+    const totalProducts = products.pagination?.total || 0;
+    const totalOrders = orders.pagination?.total || 0;
+
+    // Cập nhật số liệu
+    const box1 = document.querySelector(".box1 .number");
+    const box2 = document.querySelector(".box2 .number");
+
+    if (box1) box1.textContent = totalProducts;
+    if (box2) box2.textContent = totalOrders;
+  } catch (error) {
+    console.error("❌ Lỗi load thống kê:", error);
+  }
+}
+
+// ===== HELPER =====
 function formatPrice(number) {
   return new Intl.NumberFormat("vi-VN").format(Math.round(number));
 }
 
-// ============================================================
-// INITIALIZATION
-// ============================================================
-
+// ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
-  // Kiểm tra quyền admin
-  if (!checkAdminAccess()) {
-    return;
-  }
+  if (!checkAdminAccess()) return;
 
-  // Load dữ liệu tùy theo trang
   const currentPage = window.location.pathname;
 
   if (currentPage.includes("products.html")) {
@@ -368,28 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Load thống kê dashboard
-async function loadDashboardStats() {
-  try {
-    const [productsRes, ordersRes] = await Promise.all([
-      fetch("/api/products?limit=1"),
-      fetch("/api/orders?limit=1"),
-    ]);
-
-    const products = await productsRes.json();
-    const orders = await ordersRes.json();
-
-    // Cập nhật số liệu
-    document.querySelector(".box1 .number").textContent =
-      products.pagination?.total || 0;
-    document.querySelector(".box2 .number").textContent =
-      orders.pagination?.total || 0;
-  } catch (error) {
-    console.error("Lỗi load thống kê:", error);
-  }
-}
-
-// Export functions
+// Export
 window.AdminHandler = {
   checkAdminAccess,
   loadProductsAdmin,

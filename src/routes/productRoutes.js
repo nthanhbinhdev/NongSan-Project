@@ -1,5 +1,5 @@
 // ============================================================
-// src/routes/productRoutes.js - API SẢN PHẨM (FIXED)
+// src/routes/productRoutes.js - FIX: Hỗ trợ cả MongoDB _id và custom id
 // ============================================================
 const express = require("express");
 const router = express.Router();
@@ -8,11 +8,9 @@ const multer = require("multer");
 const path = require("path");
 const { verifyToken, isAdmin } = require("../middleware/authMiddleware");
 
-// Cấu hình upload ảnh
+// Cấu hình upload (giữ nguyên)
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads/");
-  },
+  destination: (req, file, cb) => cb(null, "public/uploads/"),
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
@@ -20,7 +18,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: storage,
+  storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|webp/;
@@ -28,16 +26,13 @@ const upload = multer({
       path.extname(file.originalname).toLowerCase()
     );
     const mime = allowedTypes.test(file.mimetype);
-
-    if (ext && mime) {
-      cb(null, true);
-    } else {
-      cb(new Error("Chỉ chấp nhận file ảnh (JPEG, PNG, WEBP)"));
-    }
+    ext && mime
+      ? cb(null, true)
+      : cb(new Error("Chỉ chấp nhận ảnh (JPEG, PNG, WEBP)"));
   },
 });
 
-// ===== GET: Lấy danh sách sản phẩm =====
+// ===== GET: Danh sách sản phẩm =====
 router.get("/", async (req, res) => {
   try {
     const {
@@ -50,35 +45,26 @@ router.get("/", async (req, res) => {
       limit = 12,
     } = req.query;
 
-    // Xây dựng query
     const query = { inStock: true };
 
-    if (category) {
-      query.category = new RegExp(category, "i");
-    }
-
-    if (search) {
+    if (category) query.category = new RegExp(category, "i");
+    if (search)
       query.$or = [
         { name: new RegExp(search, "i") },
         { category: new RegExp(search, "i") },
       ];
-    }
-
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
 
-    // Sắp xếp
     let sortOption = { createdAt: -1 };
     if (sort === "price_asc") sortOption = { price: 1 };
     else if (sort === "price_desc") sortOption = { price: -1 };
     else if (sort === "name_asc") sortOption = { name: 1 };
 
-    // Phân trang
     const skip = (page - 1) * limit;
-
     const [products, total] = await Promise.all([
       Product.find(query).sort(sortOption).limit(Number(limit)).skip(skip),
       Product.countDocuments(query),
@@ -95,43 +81,43 @@ router.get("/", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Lỗi GET /products:", error);
+    console.error("❌ GET /products error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// ===== GET: Lấy chi tiết 1 sản phẩm =====
-// File: src/routes/productRoutes.js
-
+// ===== GET: Chi tiết sản phẩm (FIX: Hỗ trợ cả MongoDB _id và custom id) =====
 router.get("/:id", async (req, res) => {
   try {
-    // 👇 Thêm dòng này để debug xem ID server nhận được là gì
-    console.log("🔍 Backend nhận ID:", req.params.id);
+    const identifier = req.params.id;
+    console.log("🔍 Tìm sản phẩm với ID:", identifier);
 
-    // Kiểm tra ID có đúng chuẩn MongoDB không (24 ký tự hex)
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "ID sản phẩm không hợp lệ" });
+    let product;
+
+    // Kiểm tra xem ID có phải MongoDB ObjectId không (24 ký tự hex)
+    if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
+      product = await Product.findById(identifier);
+    } else {
+      // Nếu không phải, tìm theo field "id" (custom ID như "TC001")
+      product = await Product.findOne({ id: identifier });
     }
-
-    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Không tìm thấy sản phẩm trong Database",
+        message: "Không tìm thấy sản phẩm",
       });
     }
 
+    console.log("✅ Tìm thấy:", product.name);
     res.json({ success: true, data: product });
   } catch (error) {
-    console.error("❌ Lỗi Backend:", error);
+    console.error("❌ GET /products/:id error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// ===== POST: Thêm sản phẩm mới (Admin only) =====
+// ===== POST: Thêm sản phẩm (Admin) =====
 router.post(
   "/",
   verifyToken,
@@ -146,9 +132,7 @@ router.post(
         discount: Number(req.body.discount) || 0,
       };
 
-      if (req.file) {
-        productData.image = `/uploads/${req.file.filename}`;
-      }
+      if (req.file) productData.image = `/uploads/${req.file.filename}`;
 
       const newProduct = new Product(productData);
       const savedProduct = await newProduct.save();
@@ -159,13 +143,13 @@ router.post(
         data: savedProduct,
       });
     } catch (error) {
-      console.error("Lỗi POST /products:", error);
+      console.error("❌ POST /products error:", error);
       res.status(400).json({ success: false, message: error.message });
     }
   }
 );
 
-// ===== PUT: Cập nhật sản phẩm (Admin only) =====
+// ===== PUT: Cập nhật sản phẩm (Admin) =====
 router.put(
   "/:id",
   verifyToken,
@@ -174,10 +158,7 @@ router.put(
   async (req, res) => {
     try {
       const updateData = { ...req.body, updatedAt: Date.now() };
-
-      if (req.file) {
-        updateData.image = `/uploads/${req.file.filename}`;
-      }
+      if (req.file) updateData.image = `/uploads/${req.file.filename}`;
 
       const updatedProduct = await Product.findByIdAndUpdate(
         req.params.id,
@@ -186,10 +167,9 @@ router.put(
       );
 
       if (!updatedProduct) {
-        return res.status(404).json({
-          success: false,
-          message: "Không tìm thấy sản phẩm",
-        });
+        return res
+          .status(404)
+          .json({ success: false, message: "Không tìm thấy sản phẩm" });
       }
 
       res.json({
@@ -198,30 +178,24 @@ router.put(
         data: updatedProduct,
       });
     } catch (error) {
-      console.error("Lỗi PUT /products/:id:", error);
+      console.error("❌ PUT /products/:id error:", error);
       res.status(400).json({ success: false, message: error.message });
     }
   }
 );
 
-// ===== DELETE: Xóa sản phẩm (Admin only) =====
+// ===== DELETE: Xóa sản phẩm (Admin) =====
 router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-
     if (!deletedProduct) {
-      return res.status(404).json({
-        success: false,
-        message: "Không tìm thấy sản phẩm",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Không tìm thấy sản phẩm" });
     }
-
-    res.json({
-      success: true,
-      message: "Xóa sản phẩm thành công",
-    });
+    res.json({ success: true, message: "Xóa sản phẩm thành công" });
   } catch (error) {
-    console.error("Lỗi DELETE /products/:id:", error);
+    console.error("❌ DELETE /products/:id error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
