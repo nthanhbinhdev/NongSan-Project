@@ -1,270 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán - Nông Sản Việt</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nông Sản Việt</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css"
+    />
 
-    <link href="./img/icon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+    <style>
+      .payment-method-card {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
 
-    <!--Themify Icon-->
-    <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
+      .payment-method-card:hover {
+        border-color: #71b979;
+        background-color: #f8f9fa;
+      }
 
-    <!--Google font-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+      .payment-method-card.selected {
+        border-color: #71b979;
+        background-color: #e8f5e9;
+      }
 
-    <!--Boostrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
+      .payment-icon {
+        font-size: 2rem;
+        width: 50px;
+        text-align: center;
+      }
 
-    <link rel="stylesheet" href="./assets/css/contact-payment.css">
-    <link rel="stylesheet" href="./assets/css/header&footer.css">
-</head>
+      .payment-info {
+        flex: 1;
+      }
 
-<body>
+      .payment-info h4 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+      }
 
-    <!--Header-->
-    <header>
-        <div class="d-flex justify-content-between">
-            <div class="empty"></div>
-            <nav class="navbar navbar-expand-sm d-flex justify-content-center">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">Giới thiệu</a>
+      .payment-info p {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 0;
+      }
 
-                    </li>
-                </ul>
-                <div>
-                    <img id="logo" src="./img/logo.png" alt="">
-                </div>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="product.html">Sản phẩm</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="news.html">Tin tức</a>
-                    </li>
-                </ul>
-            </nav>
+      .bank-info {
+        display: none;
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        border-radius: 4px;
+      }
 
+      .bank-info.show {
+        display: block;
+      }
 
-            <div class="d-flex justify-content-end">
-                <div class="header-btn shopping-cart-btn">
-                    <div class="shopping-cart-icon">
-                        <a href="cart.html">
-                            <i id="cart-icon" class="ti-shopping-cart text-secondary"></i>
-                        </a>
-                    </div>
-                </div>
+      .bank-details p {
+        margin-bottom: 8px;
+      }
 
-                <div class="header-btn account">
-                    <a href="">
-                        <div class="nav-item dropdown account-icon">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                                <i id="user-icon" class="ti-user text-secondary"></i>
-                            </a>
-                            <ul class="dropdown-menu account-dropdown">
-                                <li><a class="dropdown-item text-secondary" href="login.html">Đăng Nhập</a></li>
-                                <li><a class="dropdown-item text-secondary" href="signup.html">Đăng Ký</a></li>
-                            </ul>
-                        </div>
-                    </a>
-                </div>
+      .order-summary {
+        position: sticky;
+        top: 20px;
+      }
+
+      .form-control:focus {
+        border-color: #71b979;
+        box-shadow: 0 0 0 0.2rem rgba(113, 185, 121, 0.25);
+      }
+
+      .btn-success {
+        background-color: #71b979;
+        border-color: #71b979;
+      }
+
+      .btn-success:hover {
+        background-color: #5fa368;
+        border-color: #5fa368;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-success" href="/index.html"
+          >Nông Sản Việt</a
+        >
+        <span class="navbar-text">Thanh toán</span>
+      </div>
+    </nav>
+
+    <main class="container my-5">
+      <form id="payment-form" class="row g-4">
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">Thông tin giao hàng</h5>
             </div>
-
-        </div>
-    </header>
-    <!--End Header-->
-
-    <main>
-
-      <div>
-        <form action="">
-          <div class="payment-container row">
-            <div class="col-6">
-                <div class="title text-center">
-                    <h4>THÔNG TIN LIÊN LẠC</h4>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="name" class="form-label"
+                    >Họ và tên <span class="text-danger">*</span></label
+                  >
+                  <input type="text" class="form-control" id="name" required />
                 </div>
-
-                <div class="enter-infor-container m-3">
-                    <div class="item">
-                        <div class="enter-item">
-                            <input type="text" id="name" placeholder="Họ và tên">
-                        </div>
-                        <p class="mess-error"></p>
-                    </div>
-
-                    <div class="item">
-                        <div class="enter-item">
-                            <input type="text" id="tel" placeholder="Số điện thoại">
-                        </div>
-                        <p class="mess-error"></p>
-                    </div>
-
-                    <div class="item">
-                        <div class="enter-item">
-                            <input type="email" id="email" placeholder="Email">
-                        </div>
-                        <p class="mess-error"></p>
-                    </div>
-
-                    <div class="item">
-                    <div class="enter-item">
-                        <textarea rows="2" name="" id="place" placeholder="Địa chỉ"></textarea>
-                    </div>
-                    <p class="mess-error"></p>
-                    </div>
-
-                    <div class="item">
-                    <div class="enter-item">
-                        <textarea rows="3" name="" id="note" placeholder="Ghi chú"></textarea>
-                    </div>
-                    <p class="mess-error"></p>
-                    </div>
-
-
-                
+                <div class="col-md-6">
+                  <label for="tel" class="form-label"
+                    >Số điện thoại <span class="text-danger">*</span></label
+                  >
+                  <input type="tel" class="form-control" id="tel" required />
                 </div>
-
-            </div>
-            
-            <div class="col-6" style="padding-left: 70px;">
-              <div class="title mb-3">
-                <h4>ĐƠN HÀNG</h4>
-              </div>
-
-              <div class="row">
-                <div class="col-6">
-                  <p class="titleDetailPayment">Tổng tiền hàng:</p>
+                <div class="col-12">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" />
                 </div>
-                <div class="col-6 text-center">
-                    <p id="totalProductPrice"></p>
+                <div class="col-12">
+                  <label for="place" class="form-label"
+                    >Địa chỉ <span class="text-danger">*</span></label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="place"
+                    rows="2"
+                    required
+                  ></textarea>
+                </div>
+                <div class="col-12">
+                  <label for="note" class="form-label">Ghi chú</label>
+                  <textarea
+                    class="form-control"
+                    id="note"
+                    rows="2"
+                    placeholder="Thời gian giao hàng, lời nhắn..."
+                  ></textarea>
                 </div>
               </div>
-
-              <div class="row">
-                <div class="col-6">
-                  <p class="titleDetailPayment">Phí vận chuyển:</p>
-                </div>
-                <div class="col-6 text-center">
-                    <p id="shipFee"></p>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-6">
-                  <div class="item">
-                    <div class="enter-item m-0">
-                        <input style="width: 85%;" type="text" id="code" placeholder="Nhập mã giảm giá">
-                    </div>
-                    <p class="mess-error"></p>
-                </div>
-                </div>
-                <div class="col-6 text-center">
-                  <button class="confirm-btn m-0 w-25" type="button" id="send-infor" onclick="applyDiscount()">Áp dụng</button>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-6">
-                    <div class="cost-container">
-                        <p class="card-text cost"></p>
-                    </div>  
-                    <p class="titleDetailPayment">Tổng tiền thanh toán:</p>
-                </div>              
-                <div id="totalPayment" class="col-6 text-center">
-                    
-                </div>
-              </div>
-
-              <button class="confirm-btn" type="button" id="confirm" style="width: 82%;" onclick="comfirm()">Xác nhận đặt hàng</button>
-
             </div>
           </div>
-          
-        </form>
-          
-      </div>
 
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">Phương thức thanh toán</h5>
+            </div>
+            <div class="card-body">
+              <div id="payment-methods-container">
+                <div class="text-center py-3">
+                  <div class="spinner-border text-success" role="status"></div>
+                  <p>Đang tải phương thức thanh toán...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="order-summary">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h5 class="mb-0">Đơn hàng</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Tạm tính:</span>
+                  <span id="totalProductPrice">0đ</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span>Phí vận chuyển:</span>
+                  <span id="shipFee">20,000đ</span>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between mb-3">
+                  <strong>Tổng cộng:</strong>
+                  <div id="totalPayment">
+                    <strong class="text-success fs-4">0đ</strong>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="code" class="form-label">Mã giảm giá</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="code"
+                      placeholder="Nhập mã"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      id="apply-discount-btn"
+                    >
+                      Áp dụng
+                    </button>
+                  </div>
+                  <small class="text-muted"
+                    >Mã ví dụ: NONGSANVIET, GIAMGIA50K</small
+                  >
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-success w-100 py-2 fw-bold"
+                >
+                  <i class="ti-check"></i> Xác nhận đặt hàng
+                </button>
+              </div>
+            </div>
+
+            <div class="card mt-3">
+              <div class="card-body">
+                <h6 class="card-title">Cam kết của chúng tôi</h6>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-2">
+                    <i class="ti-check text-success"></i> Sản phẩm tươi ngon
+                  </li>
+                  <li class="mb-2">
+                    <i class="ti-check text-success"></i> Giao hàng nhanh chóng
+                  </li>
+                  <li class="mb-2">
+                    <i class="ti-check text-success"></i> Đổi trả dễ dàng
+                  </li>
+                  <li><i class="ti-check text-success"></i> Hỗ trợ 24/7</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
     </main>
 
-    <button class="to-top" href="#"><i class="ti-angle-double-up"></i></button>
-    <button class="contact-btn" href="#"><a href="contact.html"><i class="ti-headphone-alt"></i></a></button>
-    <!--Footer-->
-    <footer class="">
-        <div class="row">
-            <div class="col">
-                <h3 class="footer-tittle">Giới Thiệu</h3>
-                <p class="">
-                    <b>Nông Sản Việt</b> là hành trình của những bạn trẻ nhiệt huyết, đến từ những miền quê khác nhau,
-                    kiên trì dấn thân để cùng nhau góp phần cải thiện chuỗi cung ứng nông sản Việt và mang thực phẩm an
-                    tâm đến cho cộng đồng.
-                </p>
-            </div>
-
-            <div class="col contact-info">
-                <h3 class="footer-tittle">Thông Tin Liên Hệ</h3>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <i class="ti-headphone-alt"> </i>
-                        <i>0999 234 567</i>
-                    </li>
-                    <li class="list-group-item">
-                        <i class="ti-email"> </i>
-                        <i>nongsanviet@gmail.com</i>
-                    </li>
-                    <li class="list-group-item">
-                        <i class="ti-location-arrow"> </i>
-                        <i>Trường Đại Học Sư Phạm HCM</i>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="col">
-                <img src="./img/logo.png" alt="">
-                <p class="copyright text-center">Nông Sản Việt © 2025. All rights reserved.</p>
-            </div>
-        </div>
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">2024 Nông Sản Việt. All rights reserved.</p>
+      </div>
     </footer>
-    <!--End Footer-->
 
-</body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="assets/js/main.js"></script>
-<script src="assets/js/validate.js"></script>
-<script>
-    const toTopBtn = document.querySelector(".to-top");
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 50) {
-            toTopBtn.classList.add('active');
-        } else {
-            toTopBtn.classList.remove('active');
-        }
-    })
-
-    $(document).ready(function () {
-        $('.to-top').click(function () {
-            $('html, body').animate({ scrollTop: 0 }, 800);
-            return false;
-        });
-    });
-
-</script>
-<script>
-    window.onload = function(){
-        loadTotal();
-    }
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/payment-handler.js"></script>
+  </body>
 </html>

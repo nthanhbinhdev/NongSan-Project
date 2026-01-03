@@ -1,46 +1,64 @@
-// ============================================================
-// src/routes/shippingRoutes.js - API VẬN CHUYỂN (DEMO MODE)
-// ============================================================
-// Chạy: Thêm vào server.js -> app.use("/api/shipping", shippingRoutes);
-
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
-const { verifyToken, isAdmin, optionalAuth } = require("../middleware/authMiddleware");
+const {
+  verifyToken,
+  isAdmin,
+  optionalAuth,
+} = require("../middleware/authMiddleware");
 
-// ===== POST: Tính phí vận chuyển =====
 router.post("/calculate", (req, res) => {
   try {
-    const { address, weight, items } = req.body;
+    const { address, weight = 1, items = [] } = req.body;
 
-    // Demo: Tính phí ship đơn giản theo khu vực
-    let baseFee = 20000; // Phí cơ bản
+    let baseFee = 20000;
     let distanceFee = 0;
 
-    // Giả lập tính theo địa chỉ
     if (address) {
       const addressLower = address.toLowerCase();
 
       if (
         addressLower.includes("tp.hcm") ||
         addressLower.includes("sài gòn") ||
-        addressLower.includes("hồ chí minh")
+        addressLower.includes("hồ chí minh") ||
+        addressLower.includes("quận") ||
+        addressLower.includes("thủ đức")
       ) {
-        distanceFee = 0; // Nội thành miễn phí
+        distanceFee = 0;
       } else if (
         addressLower.includes("hà nội") ||
-        addressLower.includes("đà nẵng")
+        addressLower.includes("đà nẵng") ||
+        addressLower.includes("cần thơ") ||
+        addressLower.includes("hải phòng")
       ) {
-        distanceFee = 30000; // Thành phố lớn
+        distanceFee = 30000;
+      } else if (
+        addressLower.includes("bình dương") ||
+        addressLower.includes("đồng nai") ||
+        addressLower.includes("bà rịa") ||
+        addressLower.includes("long an")
+      ) {
+        distanceFee = 15000;
       } else {
-        distanceFee = 50000; // Tỉnh xa
+        distanceFee = 50000;
       }
     }
 
-    // Tính thêm phí theo trọng lượng (demo)
-    const weightFee = weight > 5 ? (weight - 5) * 5000 : 0;
+    const totalWeight = items.reduce((sum, item) => {
+      return sum + (item.quantity || 1) * (item.weight || 0.5);
+    }, weight);
+
+    const weightFee =
+      totalWeight > 5 ? Math.ceil((totalWeight - 5) / 2) * 5000 : 0;
 
     const totalShippingFee = baseFee + distanceFee + weightFee;
+
+    const estimatedDays =
+      distanceFee === 0
+        ? "1-2 ngày"
+        : distanceFee <= 30000
+        ? "2-3 ngày"
+        : "3-5 ngày";
 
     res.json({
       success: true,
@@ -49,7 +67,8 @@ router.post("/calculate", (req, res) => {
         distanceFee,
         weightFee,
         totalShippingFee,
-        estimatedDays: distanceFee === 0 ? "1-2 ngày" : "2-4 ngày",
+        totalWeight: totalWeight.toFixed(2),
+        estimatedDays,
         breakdown: [
           { label: "Phí cơ bản", amount: baseFee },
           { label: "Phí khoảng cách", amount: distanceFee },
@@ -58,7 +77,7 @@ router.post("/calculate", (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ POST /shipping/calculate error:", error);
+    console.error("POST /shipping/calculate error:", error);
     res.status(500).json({
       success: false,
       message: "Lỗi tính phí vận chuyển",
@@ -66,10 +85,10 @@ router.post("/calculate", (req, res) => {
   }
 });
 
-// ===== POST: Tạo đơn vận chuyển (Admin) =====
 router.post("/create", verifyToken, isAdmin, async (req, res) => {
   try {
-    const { orderId, shippingPartner, trackingNumber } = req.body;
+    const { orderId, shippingPartner, trackingNumber, estimatedDelivery } =
+      req.body;
 
     const order = await Order.findById(orderId);
     if (!order) {
@@ -79,20 +98,25 @@ router.post("/create", verifyToken, isAdmin, async (req, res) => {
       });
     }
 
-    // Cập nhật trạng thái đơn hàng
+    if (order.status !== "confirmed") {
+      return res.status(400).json({
+        success: false,
+        message: "Đơn hàng chưa được xác nhận",
+      });
+    }
+
     order.status = "shipping";
     order.shippedAt = Date.now();
 
-    // Lưu thông tin vận chuyển (giả lập)
     const shippingInfo = {
       shippingPartner: shippingPartner || "Giao hàng nhanh",
-      trackingNumber: trackingNumber || `GHN-${Date.now()}`,
+      trackingNumber: trackingNumber || `GHN${Date.now()}`,
+      estimatedDelivery: estimatedDelivery || "2-3 ngày",
       createdAt: Date.now(),
     };
 
-    // Có thể lưu vào order hoặc collection riêng (demo đơn giản)
-    // Ở đây ta chỉ giả lập, không lưu thực tế vào DB
-
+    order.note =
+      (order.note || "") + ` | Shipping: ${JSON.stringify(shippingInfo)}`;
     await order.save();
 
     res.json({
@@ -108,7 +132,7 @@ router.post("/create", verifyToken, isAdmin, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ POST /shipping/create error:", error);
+    console.error("POST /shipping/create error:", error);
     res.status(500).json({
       success: false,
       message: "Lỗi tạo đơn vận chuyển",
@@ -116,7 +140,6 @@ router.post("/create", verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// ===== GET: Theo dõi đơn hàng (Tracking) =====
 router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId);
@@ -128,7 +151,6 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
       });
     }
 
-    // Giả lập timeline vận chuyển
     const timeline = [];
 
     timeline.push({
@@ -158,14 +180,16 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
         completed: true,
       });
 
-      // Giả lập các điểm dừng trên đường
-      timeline.push({
-        status: "in_transit",
-        title: "Hàng đang trên đường",
-        description: "Đơn hàng đang di chuyển đến khu vực của bạn",
-        timestamp: new Date(order.shippedAt.getTime() + 86400000), // +1 ngày
-        completed: order.status !== "shipping",
-      });
+      const inTransitTime = new Date(order.shippedAt.getTime() + 43200000);
+      if (order.status === "shipping" || order.deliveredAt) {
+        timeline.push({
+          status: "in_transit",
+          title: "Hàng đang trên đường",
+          description: "Đơn hàng đang di chuyển đến khu vực của bạn",
+          timestamp: inTransitTime,
+          completed: order.status !== "shipping",
+        });
+      }
     }
 
     if (order.deliveredAt) {
@@ -177,13 +201,14 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
         completed: true,
       });
     } else if (order.status === "shipping") {
+      const estimatedTime = new Date(order.shippedAt.getTime() + 172800000);
       timeline.push({
         status: "out_for_delivery",
         title: "Đang giao hàng",
         description: "Shipper đang trên đường giao hàng đến bạn",
         timestamp: null,
         completed: false,
-        estimated: "Dự kiến trong 2-4 giờ tới",
+        estimated: estimatedTime.toLocaleDateString("vi-VN"),
       });
     }
 
@@ -191,11 +216,20 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
       timeline.push({
         status: "cancelled",
         title: "Đơn hàng đã bị hủy",
-        description: "Đơn hàng đã bị hủy theo yêu cầu",
+        description: order.note || "Đơn hàng đã bị hủy",
         timestamp: order.cancelledAt,
         completed: true,
       });
     }
+
+    const currentLocation =
+      order.status === "delivered"
+        ? order.customer.address
+        : order.status === "shipping"
+        ? "Đang trên đường giao hàng"
+        : order.status === "confirmed"
+        ? "Kho hàng"
+        : "Đang xử lý";
 
     res.json({
       success: true,
@@ -207,6 +241,7 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
         },
         tracking: {
           currentStatus: order.status,
+          currentLocation,
           estimatedDelivery:
             order.status === "shipping"
               ? "2-4 ngày"
@@ -218,7 +253,7 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ GET /shipping/tracking error:", error);
+    console.error("GET /shipping/tracking error:", error);
     res.status(500).json({
       success: false,
       message: "Lỗi lấy thông tin vận chuyển",
@@ -226,32 +261,31 @@ router.get("/tracking/:orderId", optionalAuth, async (req, res) => {
   }
 });
 
-// ===== GET: Danh sách đơn vị vận chuyển =====
 router.get("/partners", (req, res) => {
   const partners = [
     {
       id: "ghn",
       name: "Giao hàng nhanh",
       description: "Đối tác vận chuyển chính",
-      logo: "🚚",
       estimatedDays: "2-3 ngày",
       rating: 4.5,
+      priceRange: "15.000 - 50.000đ",
     },
     {
       id: "ghtk",
       name: "Giao hàng tiết kiệm",
       description: "Giá rẻ, phù hợp đơn nhỏ",
-      logo: "📦",
       estimatedDays: "3-5 ngày",
       rating: 4.2,
+      priceRange: "12.000 - 40.000đ",
     },
     {
       id: "vnpost",
       name: "VN Post",
       description: "Bưu điện Việt Nam",
-      logo: "📮",
       estimatedDays: "4-7 ngày",
       rating: 4.0,
+      priceRange: "10.000 - 35.000đ",
     },
   ];
 
@@ -260,5 +294,54 @@ router.get("/partners", (req, res) => {
     data: partners,
   });
 });
+
+router.put(
+  "/update-status/:orderId",
+  verifyToken,
+  isAdmin,
+  async (req, res) => {
+    try {
+      const { location, note } = req.body;
+
+      const order = await Order.findById(req.params.orderId);
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Không tìm thấy đơn hàng",
+        });
+      }
+
+      if (order.status !== "shipping") {
+        return res.status(400).json({
+          success: false,
+          message: "Đơn hàng không ở trạng thái đang giao",
+        });
+      }
+
+      const updateNote = `${new Date().toLocaleString("vi-VN")} - Vị trí: ${
+        location || "Đang cập nhật"
+      }`;
+      order.note = (order.note || "") + ` | ${updateNote}`;
+
+      if (note) {
+        order.note += ` - ${note}`;
+      }
+
+      await order.save();
+
+      res.json({
+        success: true,
+        message: "Đã cập nhật trạng thái vận chuyển",
+        data: order,
+      });
+    } catch (error) {
+      console.error("PUT /shipping/update-status error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Lỗi cập nhật trạng thái",
+      });
+    }
+  }
+);
 
 module.exports = router;

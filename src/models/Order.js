@@ -1,6 +1,3 @@
-// ============================================================
-// src/models/Order.js - MODEL ĐƠN HÀNG
-// ============================================================
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
@@ -11,7 +8,6 @@ const orderSchema = new mongoose.Schema({
     default: () => "ORD" + Date.now() + Math.floor(Math.random() * 1000),
   },
 
-  // Thông tin khách hàng
   customer: {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     name: { type: String, required: true },
@@ -20,7 +16,6 @@ const orderSchema = new mongoose.Schema({
     address: { type: String, required: true },
   },
 
-  // Sản phẩm trong đơn
   items: [
     {
       productId: { 
@@ -35,20 +30,17 @@ const orderSchema = new mongoose.Schema({
     },
   ],
 
-  // Thanh toán
   totalAmount: { type: Number, required: true },
   shippingFee: { type: Number, default: 20000 },
   discount: { type: Number, default: 0 },
   finalAmount: { type: Number, required: true },
 
-  // Trạng thái đơn hàng
   status: {
     type: String,
     enum: ["pending", "confirmed", "shipping", "delivered", "cancelled"],
     default: "pending",
   },
 
-  // Phương thức thanh toán
   paymentMethod: {
     type: String,
     enum: ["cod", "bank_transfer", "momo", "zalopay"],
@@ -61,10 +53,15 @@ const orderSchema = new mongoose.Schema({
     default: "unpaid",
   },
 
-  // Ghi chú
+  shippingInfo: {
+    partner: String,
+    trackingNumber: String,
+    estimatedDelivery: String,
+    currentLocation: String,
+  },
+
   note: String,
 
-  // Thời gian
   createdAt: { type: Date, default: Date.now },
   confirmedAt: Date,
   shippedAt: Date,
@@ -73,16 +70,84 @@ const orderSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Middleware tự động cập nhật updatedAt
 orderSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-// Index để tìm kiếm nhanh
+orderSchema.methods.getTimeline = function() {
+  const timeline = [];
+
+  timeline.push({
+    event: "created",
+    title: "Đơn hàng được đặt",
+    description: `Đơn hàng #${this.orderNumber} đã được tạo`,
+    timestamp: this.createdAt,
+    completed: true,
+  });
+
+  if (this.confirmedAt) {
+    timeline.push({
+      event: "confirmed",
+      title: "Đơn hàng được xác nhận",
+      description: "Người bán đã xác nhận và đang chuẩn bị hàng",
+      timestamp: this.confirmedAt,
+      completed: true,
+    });
+  }
+
+  if (this.shippedAt) {
+    timeline.push({
+      event: "shipped",
+      title: "Đơn hàng đang được giao",
+      description: "Đơn hàng đã được chuyển cho đơn vị vận chuyển",
+      timestamp: this.shippedAt,
+      completed: true,
+    });
+  }
+
+  if (this.deliveredAt) {
+    timeline.push({
+      event: "delivered",
+      title: "Đã giao hàng thành công",
+      description: "Đơn hàng đã được giao đến bạn",
+      timestamp: this.deliveredAt,
+      completed: true,
+    });
+  }
+
+  if (this.cancelledAt) {
+    timeline.push({
+      event: "cancelled",
+      title: "Đơn hàng đã bị hủy",
+      description: this.note || "Đơn hàng đã bị hủy",
+      timestamp: this.cancelledAt,
+      completed: true,
+    });
+  }
+
+  return timeline;
+};
+
+orderSchema.methods.canBeCancelled = function() {
+  return ["pending", "confirmed"].includes(this.status);
+};
+
+orderSchema.methods.getStatusLabel = function() {
+  const labels = {
+    pending: "Chờ xác nhận",
+    confirmed: "Đã xác nhận",
+    shipping: "Đang giao",
+    delivered: "Đã giao",
+    cancelled: "Đã hủy",
+  };
+  return labels[this.status] || this.status;
+};
+
 orderSchema.index({ orderNumber: 1 });
 orderSchema.index({ "customer.userId": 1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ createdAt: -1 });
+orderSchema.index({ "customer.phone": 1 });
 
 module.exports = mongoose.model("Order", orderSchema);
