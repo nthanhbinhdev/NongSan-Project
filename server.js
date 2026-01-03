@@ -110,7 +110,7 @@ app.use((err, req, res, next) => {
 // 8. Start Server
 app.listen(PORT, () => {
   console.log("\n╔══════════════════════════════════════════════════╗");
-  console.log(`║  🚀 Server đang chạy tại: http://localhost:${PORT}  ║`);
+  console.log(`║  Server đang chạy tại: http://localhost:${PORT}  ║`);
   console.log("╚══════════════════════════════════════════════════╝");
   console.log(`📡 API endpoint: http://localhost:${PORT}/api`);
   console.log(`🔧 Admin endpoint: http://localhost:${PORT}/api/admin`);

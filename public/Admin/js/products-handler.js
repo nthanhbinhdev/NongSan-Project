@@ -102,7 +102,7 @@ async function editProductQuantity(productId, currentQuantity) {
   const qty = parseInt(newQuantity);
 
   if (isNaN(qty) || qty < 0 || qty > 9999) {
-    alert("❌ Số lượng không hợp lệ (0-9999)");
+    alert("Số lượng không hợp lệ (0-9999)");
     return;
   }
 
@@ -113,13 +113,13 @@ async function editProductQuantity(productId, currentQuantity) {
     });
 
     if (data.success) {
-      alert("✅ Cập nhật thành công!");
+      alert("Cập nhật thành công!");
       loadProducts(); // Reload
     } else {
-      alert("❌ " + data.message);
+      alert("X " + data.message);
     }
   } catch (error) {
-    console.error("❌ Error updating quantity:", error);
+    console.error(" Error updating quantity:", error);
     alert("Không thể cập nhật số lượng");
   }
 }
@@ -136,13 +136,13 @@ async function deleteProduct(productId, productName) {
     });
 
     if (data.success) {
-      alert("✅ Đã xóa sản phẩm!");
+      alert("Đã xóa sản phẩm!");
       loadProducts(); // Reload
     } else {
-      alert("❌ " + data.message);
+      alert(" " + data.message);
     }
   } catch (error) {
-    console.error("❌ Error deleting product:", error);
+    console.error(" Error deleting product:", error);
     alert("Không thể xóa sản phẩm");
   }
 }
@@ -172,7 +172,7 @@ function attachEventListeners() {
   });
 }
 
-// Modal thêm sản phẩm (giữ nguyên logic cũ)
+// Modal thêm sản phẩm
 function setupAddProductModal() {
   const modal = document.getElementById("myModal");
   const form = document.getElementById("addProductForm");
@@ -218,14 +218,14 @@ function setupAddProductModal() {
       const data = await response.json();
 
       if (data.success) {
-        alert("✅ Thêm sản phẩm thành công!");
+        alert("Thêm sản phẩm thành công!");
         closeModal();
         loadProducts();
       } else {
-        alert("❌ " + data.message);
+        alert("" + data.message);
       }
     } catch (error) {
-      console.error("❌ Error adding product:", error);
+      console.error("Error adding product:", error);
       alert("Không thể thêm sản phẩm");
     }
   });

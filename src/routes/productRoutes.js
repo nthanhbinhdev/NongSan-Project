@@ -109,10 +109,10 @@ router.get("/:id", async (req, res) => {
       });
     }
 
-    console.log("✅ Tìm thấy:", product.name);
+    console.log("Tìm thấy:", product.name);
     res.json({ success: true, data: product });
   } catch (error) {
-    console.error("❌ GET /products/:id error:", error);
+    console.error("GET /products/:id error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -143,7 +143,7 @@ router.post(
         data: savedProduct,
       });
     } catch (error) {
-      console.error("❌ POST /products error:", error);
+      console.error("POST /products error:", error);
       res.status(400).json({ success: false, message: error.message });
     }
   }
@@ -178,7 +178,7 @@ router.put(
         data: updatedProduct,
       });
     } catch (error) {
-      console.error("❌ PUT /products/:id error:", error);
+      console.error("PUT /products/:id error:", error);
       res.status(400).json({ success: false, message: error.message });
     }
   }
@@ -195,7 +195,7 @@ router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
     }
     res.json({ success: true, message: "Xóa sản phẩm thành công" });
   } catch (error) {
-    console.error("❌ DELETE /products/:id error:", error);
+    console.error("DELETE /products/:id error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
