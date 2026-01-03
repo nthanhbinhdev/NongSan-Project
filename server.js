@@ -11,6 +11,9 @@ const orderRoutes = require("./src/routes/orderRoutes");
 const cartRoutes = require("./src/routes/cartRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
+const paymentRoutes = require("./src/routes/paymentRoutes");
+const shippingRoutes = require("./src/routes/shippingRoutes");
+const analyticsRoutes = require("./src/routes/analyticsRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,14 +51,14 @@ mongoose
     connectTimeoutMS: 30000,
   })
   .then(() => {
-    console.log("✅ Đã kết nối MongoDB thành công!");
-    console.log("📊 Database:", mongoose.connection.name);
+    console.log("Đã kết nối MongoDB thành công!");
+    console.log("Database:", mongoose.connection.name);
   })
   .catch((err) => {
     console.error("❌ Lỗi kết nối MongoDB:");
     console.error("   Message:", err.message);
     console.error("   Code:", err.code);
-    console.error("\n⚠️  Kiểm tra:");
+    console.error("\n Kiểm tra:");
     console.error("   1. MONGO_URI có đúng không?");
     console.error("   2. MongoDB Atlas Network Access đã whitelist IP chưa?");
     console.error("   3. Database user có quyền readWrite?");
@@ -88,6 +91,9 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/shipping", shippingRoutes);
+app.use("/api/analytics", analyticsRoutes); // Chỉ admin mới dùng được
 
 // 6. Xử lý 404
 app.use((req, res, next) => {

@@ -1,116 +1,176 @@
 // ============================================================
-// public/assets/js/api.js - GỌI API BACKEND
+// public/assets/js/api.js
+// Cập nhật lần cuối: 03/01/2026
+// Mô tả: Module xử lý toàn bộ các gọi API tới Backend
 // ============================================================
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:3000/api"
-    : "/api"; // Tự động chuyển sang production URL
+    : "/api";
 
 // ============================================================
-// HELPER FUNCTIONS
+// 1. CORE HELPER FUNCTIONS (Xử lý Request/Response)
 // ============================================================
 
-// Lấy token từ localStorage
+/**
+ * Lấy token xác thực từ LocalStorage
+ */
 function getAuthToken() {
   return localStorage.getItem("accessToken");
 }
 
-// Fetch wrapper với authentication
-async function fetchAPI(url, options = {}) {
+/**
+ * Wrapper cho fetch API với các tính năng:
+ * - Tự động đính kèm Token
+ * - Tự động xử lý Content-Type (JSON vs FormData)
+ * - Xử lý lỗi tập trung
+ */
+async function fetchAPI(endpoint, options = {}) {
   const token = getAuthToken();
+  const headers = { ...options.headers };
 
-  const headers = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
+  // Logic quan trọng:
+  // Nếu body là FormData, trình duyệt sẽ tự động set Content-Type là multipart/form-data kèm boundary.
+  // Ta KHÔNG ĐƯỢC set thủ công application/json trong trường hợp này.
+  const isFormData = options.body instanceof FormData;
+
+  if (!isFormData && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
+  const url = `${API_BASE_URL}${endpoint}`;
+
   try {
-    const response = await fetch(`${API_BASE_URL}${url}`, {
+    const response = await fetch(url, {
       ...options,
       headers,
     });
 
-    const data = await response.json();
+    // Xử lý trường hợp 204 No Content (thành công nhưng không có body)
+    if (response.status === 204) {
+      return null;
+    }
 
+    // Cố gắng parse JSON an toàn
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      // Fallback nếu server trả về text hoặc HTML lỗi
+      data = { message: await response.text() };
+    }
+
+    // Nếu response không OK (status 4xx, 5xx)
     if (!response.ok) {
-      throw new Error(data.message || "Có lỗi xảy ra");
+      throw new Error(data.message || `Lỗi API: ${response.status}`);
     }
 
     return data;
   } catch (error) {
-    console.error("API Error:", error);
+    console.error(`[API Error] ${endpoint}:`, error);
+    // Ném lỗi tiếp để UI component có thể bắt được và hiển thị alert
     throw error;
   }
 }
 
 // ============================================================
-// PRODUCT API
+// 2. AUTHENTICATION API
+// ============================================================
+
+const AuthAPI = {
+  login: async (idToken) => {
+    return fetchAPI("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ idToken }),
+    });
+  },
+
+  register: async (idToken, userData) => {
+    return fetchAPI("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ idToken, ...userData }),
+    });
+  },
+
+  logout: () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    CartAPI.clear(); // Xóa giỏ hàng local khi đăng xuất
+    window.location.href = "/login.html";
+  },
+
+  isLoggedIn: () => !!getAuthToken(),
+
+  getCurrentUser: () => {
+    try {
+      return JSON.parse(localStorage.getItem("user"));
+    } catch {
+      return null;
+    }
+  },
+};
+
+// ============================================================
+// 3. PRODUCT API
 // ============================================================
 
 const ProductAPI = {
-  // Lấy danh sách sản phẩm
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     return fetchAPI(`/products?${queryString}`);
   },
 
-  // Lấy chi tiết 1 sản phẩm
   getById: async (id) => {
     return fetchAPI(`/products/${id}`);
   },
 
-  // Tìm kiếm sản phẩm
   search: async (keyword, category = "") => {
     const params = { search: keyword };
     if (category) params.category = category;
     return ProductAPI.getAll(params);
   },
 
-  // Lọc theo giá
   filterByPrice: async (minPrice, maxPrice) => {
     return ProductAPI.getAll({ minPrice, maxPrice });
   },
 
-  // Sắp xếp
   sort: async (sortBy) => {
     return ProductAPI.getAll({ sort: sortBy });
   },
 
-  // [ADMIN] Thêm sản phẩm
+  // [ADMIN] - FormData được truyền trực tiếp, fetchAPI sẽ tự xử lý headers
   create: async (formData) => {
     return fetchAPI("/products", {
       method: "POST",
       body: formData,
-      headers: {}, // FormData tự set Content-Type
     });
   },
 
-  // [ADMIN] Cập nhật sản phẩm
+  // [ADMIN]
   update: async (id, formData) => {
     return fetchAPI(`/products/${id}`, {
       method: "PUT",
       body: formData,
-      headers: {},
     });
   },
 
-  // [ADMIN] Xóa sản phẩm
+  // [ADMIN]
   delete: async (id) => {
     return fetchAPI(`/products/${id}`, { method: "DELETE" });
   },
 };
 
 // ============================================================
-// ORDER API
+// 4. ORDER API (Đã gộp EnhancedOrder vào đây)
 // ============================================================
 
 const OrderAPI = {
-  // Tạo đơn hàng mới
   create: async (orderData) => {
     return fetchAPI("/orders", {
       method: "POST",
@@ -118,25 +178,44 @@ const OrderAPI = {
     });
   },
 
-  // Lấy danh sách đơn hàng
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     return fetchAPI(`/orders?${queryString}`);
   },
 
-  // Lấy chi tiết đơn hàng
   getById: async (id) => {
     return fetchAPI(`/orders/${id}`);
   },
 
-  // Lấy đơn hàng của user hiện tại
+  // Lấy danh sách đơn của user hiện tại
   getMyOrders: async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) throw new Error("Chưa đăng nhập");
-    return OrderAPI.getAll({ userId: user._id });
+    // Lưu ý: Tốt nhất Backend nên tự lấy userId từ Token.
+    // Cách này là fallback nếu backend yêu cầu userId trên query params.
+    const user = AuthAPI.getCurrentUser();
+    if (!user) throw new Error("Vui lòng đăng nhập để xem đơn hàng");
+    return fetchAPI(`/orders?userId=${user._id}`);
   },
 
-  // [ADMIN] Cập nhật trạng thái đơn hàng
+  // Lịch sử đơn hàng (Phân trang)
+  getHistory: async (userId, page = 1) => {
+    return fetchAPI(`/orders/history?userId=${userId}&page=${page}`);
+  },
+
+  // Timeline trạng thái đơn hàng
+  getTimeline: async (orderId) => {
+    return fetchAPI(`/orders/${orderId}/timeline`);
+  },
+
+  // Hủy đơn hàng
+  cancel: async (orderId, reason) => {
+    const user = AuthAPI.getCurrentUser();
+    return fetchAPI(`/orders/${orderId}/cancel`, {
+      method: "POST",
+      body: JSON.stringify({ reason, userId: user?._id }),
+    });
+  },
+
+  // [ADMIN] Cập nhật trạng thái
   updateStatus: async (id, status) => {
     return fetchAPI(`/orders/${id}/status`, {
       method: "PUT",
@@ -146,11 +225,10 @@ const OrderAPI = {
 };
 
 // ============================================================
-// CART API (LocalStorage + Backend Sync)
+// 5. CART API (Local Storage Logic)
 // ============================================================
 
 const CartAPI = {
-  // Lấy giỏ hàng từ localStorage
   getLocal: () => {
     try {
       return JSON.parse(localStorage.getItem("cart")) || [];
@@ -159,12 +237,12 @@ const CartAPI = {
     }
   },
 
-  // Lưu giỏ hàng vào localStorage
   saveLocal: (cart) => {
     localStorage.setItem("cart", JSON.stringify(cart));
+    // Có thể bắn custom event để update UI header realtime
+    window.dispatchEvent(new Event("cart-updated"));
   },
 
-  // Thêm sản phẩm vào giỏ
   addItem: (productId, quantity = 1) => {
     const cart = CartAPI.getLocal();
     const existingItem = cart.find((item) => item.productId === productId);
@@ -179,20 +257,17 @@ const CartAPI = {
     return cart;
   },
 
-  // Cập nhật số lượng
   updateQuantity: (productId, quantity) => {
     const cart = CartAPI.getLocal();
     const item = cart.find((item) => item.productId === productId);
 
     if (item) {
-      item.quantity = quantity;
+      item.quantity = Number(quantity); // Đảm bảo là số
       CartAPI.saveLocal(cart);
     }
-
     return cart;
   },
 
-  // Xóa sản phẩm khỏi giỏ
   removeItem: (productId) => {
     let cart = CartAPI.getLocal();
     cart = cart.filter((item) => item.productId !== productId);
@@ -200,12 +275,11 @@ const CartAPI = {
     return cart;
   },
 
-  // Xóa toàn bộ giỏ hàng
   clear: () => {
     localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("cart-updated"));
   },
 
-  // Lấy tổng số sản phẩm
   getCount: () => {
     const cart = CartAPI.getLocal();
     return cart.reduce((total, item) => total + item.quantity, 0);
@@ -213,87 +287,51 @@ const CartAPI = {
 };
 
 // ============================================================
-// AUTH API
+// 6. PAYMENT & SHIPPING API
 // ============================================================
 
-const AuthAPI = {
-  // Đăng nhập (sử dụng Firebase)
-  login: async (idToken) => {
-    return fetchAPI("/auth/login", {
+const PaymentAPI = {
+  getMethods: async () => {
+    return fetchAPI("/payment/methods");
+  },
+
+  process: async (orderId, paymentMethod) => {
+    return fetchAPI("/payment/process", {
       method: "POST",
-      body: JSON.stringify({ idToken }),
+      body: JSON.stringify({ orderId, paymentMethod }),
     });
   },
 
-  // Đăng ký (sử dụng Firebase)
-  register: async (idToken, userData) => {
-    return fetchAPI("/auth/register", {
+  getStatus: async (orderId) => {
+    return fetchAPI(`/payment/status/${orderId}`);
+  },
+};
+
+const ShippingAPI = {
+  calculateFee: async (address, weight) => {
+    return fetchAPI("/shipping/calculate", {
       method: "POST",
-      body: JSON.stringify({ idToken, ...userData }),
+      body: JSON.stringify({ address, weight }),
     });
   },
 
-  // Đăng xuất
-  logout: () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
-    CartAPI.clear();
-    window.location.href = "/login.html";
-  },
-
-  // Kiểm tra đăng nhập
-  isLoggedIn: () => {
-    return !!getAuthToken();
-  },
-
-  // Lấy thông tin user hiện tại
-  getCurrentUser: () => {
-    try {
-      return JSON.parse(localStorage.getItem("user"));
-    } catch {
-      return null;
-    }
+  tracking: async (orderId) => {
+    return fetchAPI(`/shipping/tracking/${orderId}`);
   },
 };
 
 // ============================================================
-// EXPORT
+// 7. EXPORT TO GLOBAL SCOPE
 // ============================================================
 
-// Expose to global scope
+// Gom tất cả vào một object duy nhất để tránh ghi đè
 window.API = {
-  Product: ProductAPI,
-  Order: OrderAPI,
-  Cart: CartAPI,
   Auth: AuthAPI,
+  Product: ProductAPI,
+  Order: OrderAPI, // Bao gồm cả tính năng Enhanced
+  Cart: CartAPI,
+  Payment: PaymentAPI,
+  Shipping: ShippingAPI,
 };
 
-// ============================================================
-// USAGE EXAMPLES
-// ============================================================
-
-/*
-// Tìm kiếm sản phẩm
-const products = await API.Product.search('cam');
-
-// Thêm vào giỏ hàng
-API.Cart.addItem('TC001', 2);
-
-// Lấy số lượng trong giỏ
-const count = API.Cart.getCount();
-
-// Tạo đơn hàng
-const order = await API.Order.create({
-  customer: {
-    name: 'Nguyễn Văn A',
-    phone: '0909123456',
-    email: 'test@gmail.com',
-    address: 'TP.HCM'
-  },
-  items: API.Cart.getLocal(),
-  paymentMethod: 'cod'
-});
-
-// Đăng xuất
-API.Auth.logout();
-*/
+console.log("API Module Loaded Successfully");
